@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 
-const C = { bg:"#F7F3EE",white:"#FFFFFF",accent:"#C4503A",green:"#2B4438",text:"#1C1712",muted:"#7A6E65",border:"#E5DDD4",card:"#FAF8F5" };
+const C = { bg:"#F7F3EE",white:"#FFFFFF",accent:"#E0A96D",green:"#1C2A38",text:"#1C2A38",muted:"#7A8B99",border:"#DDE3E8",card:"#F4F7F9" };
 
 const WALL_COLORS = [
   { name:"Warm White",  hex:"#F5F0E8", filter:"brightness(1.05) saturate(0.9)",                    tint:"rgba(245,240,232,0.18)" },
@@ -10,7 +10,7 @@ const WALL_COLORS = [
   { name:"Blush",       hex:"#D9B0A8", filter:"sepia(0.28) hue-rotate(320deg) saturate(0.85)",     tint:"rgba(217,176,168,0.24)" },
   { name:"Charcoal",    hex:"#4A4440", filter:"grayscale(0.55) brightness(0.65)",                  tint:"rgba(74,68,64,0.30)"    },
   { name:"Cream",       hex:"#EDE0C4", filter:"sepia(0.38) brightness(1.06)",                      tint:"rgba(237,224,196,0.28)" },
-  { name:"Forest",      hex:"#2D4A3E", filter:"hue-rotate(115deg) saturate(0.85) brightness(0.6)", tint:"rgba(45,74,62,0.30)"    },
+  { name:"Forest",      hex:"#2D4A3E", filter:"hue-rotate(115deg) saturate(0.85) brightness(0.6)", tint:"rgba(28,42,56,0.30)"    },
   { name:"Dusty Lilac", hex:"#9D8FA8", filter:"hue-rotate(265deg) saturate(0.5) brightness(0.9)",  tint:"rgba(157,143,168,0.24)" },
   { name:"Camel",       hex:"#C9A87C", filter:"sepia(0.6) hue-rotate(5deg) saturate(0.9)",         tint:"rgba(201,168,124,0.24)" },
 ];
@@ -57,7 +57,7 @@ function useFonts() {
     if (document.getElementById("mde-fonts")) return;
     const l = document.createElement("link");
     l.id="mde-fonts"; l.rel="stylesheet";
-    l.href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap";
+    l.href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap";
     document.head.appendChild(l);
   }, []);
 }
@@ -75,20 +75,20 @@ export default function MDEscapesApp() {
   const visRef=useRef(null);
   const scrollToVis=()=>{setActiveSection("visualizer");setTimeout(()=>visRef.current?.scrollIntoView({behavior:"smooth",block:"start"}),50);};
   return (
-    <div style={{fontFamily:"'DM Sans',sans-serif",background:C.bg,minHeight:"100vh",color:C.text}}>
+    <div style={{fontFamily:"'Montserrat',sans-serif",background:C.bg,minHeight:"100vh",color:C.text}}>
       <style>{`
         *{box-sizing:border-box;margin:0;padding:0;}
         @keyframes spin{to{transform:rotate(360deg);}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
         @keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
-        .ma:hover{background:#B03D2C!important;}
+        .ma:hover{background:#C8894D!important;}
         .mg:hover{background:rgba(28,23,18,.06)!important;}
         .mchip:hover{transform:scale(1.04);box-shadow:0 2px 10px rgba(0,0,0,.14);}
-        .mrow:hover{border-color:#C4503A!important;background:rgba(196,80,58,.04)!important;}
-        .mnl:hover{color:#C4503A!important;}
-        .mup:hover{border-color:#C4503A!important;background:rgba(196,80,58,.03)!important;}
+        .mrow:hover{border-color:#1C2A38!important;background:rgba(28,42,56,.04)!important;}
+        .mnl:hover{color:#E0A96D!important;}
+        .mup:hover{border-color:#E0A96D!important;background:rgba(224,169,109,.03)!important;}
         .mcard:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.1);}
-        .mqt:hover{border-color:#C4503A!important;transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08);}
+        .mqt:hover{border-color:#E0A96D!important;transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08);}
       `}</style>
       <Nav activeSection={activeSection} setActiveSection={setActiveSection} scrollToVis={scrollToVis} isMobile={isMobile}/>
       <HeroSection activePropType={activePropType} setActivePropType={setActivePropType} scrollToVis={scrollToVis} isMobile={isMobile} isTablet={isTablet}/>
@@ -106,17 +106,17 @@ function Nav({activeSection,setActiveSection,scrollToVis,isMobile}){
   return(
     <nav style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:isMobile?"14px 20px":"16px 48px",borderBottom:`1px solid ${C.border}`,background:C.bg,position:"sticky",top:0,zIndex:300}}>
       <div style={{display:"flex",alignItems:"center",gap:8}}>
-        <div style={{width:28,height:28,borderRadius:"50%",background:C.accent,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{color:"white",fontSize:12,fontWeight:700}}>M</span></div>
+        <div style={{width:28,height:28,borderRadius:"50%",background:C.green,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{color:"white",fontSize:12,fontWeight:700}}>M</span></div>
         <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:isMobile?16:19,letterSpacing:"-0.4px"}}>md escapes</span>
       </div>
       {!isMobile&&<div style={{display:"flex",gap:28,alignItems:"center"}}>
-        <button className="mnl" onClick={()=>setActiveSection("stays")} style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:activeSection==="stays"?C.accent:C.text,transition:"color .2s",fontFamily:"'DM Sans',sans-serif"}}>Stays</button>
-        <button className="mnl" onClick={scrollToVis} style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:activeSection==="visualizer"?C.accent:C.text,transition:"color .2s",display:"flex",alignItems:"center",gap:5,fontFamily:"'DM Sans',sans-serif"}}><span style={{fontSize:10}}>✦</span> AI Visualizer</button>
+        <button className="mnl" onClick={()=>setActiveSection("stays")} style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:activeSection==="stays"?C.accent:C.text,transition:"color .2s",fontFamily:"'Montserrat',sans-serif"}}>Stays</button>
+        <button className="mnl" onClick={scrollToVis} style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:activeSection==="visualizer"?C.accent:C.text,transition:"color .2s",display:"flex",alignItems:"center",gap:5,fontFamily:"'Montserrat',sans-serif"}}><span style={{fontSize:10}}>✦</span> AI Visualizer</button>
       </div>}
       <div style={{display:"flex",gap:isMobile?8:14,alignItems:"center"}}>
-        {!isMobile&&<button className="mg" style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:C.text,padding:"8px 14px",borderRadius:50,transition:"background .15s",fontFamily:"'DM Sans',sans-serif"}}>Sign in</button>}
-        <button className="ma" style={{background:C.accent,color:"white",border:"none",borderRadius:50,padding:isMobile?"9px 16px":"10px 22px",fontSize:isMobile?13:15,fontWeight:600,cursor:"pointer",transition:"background .2s",fontFamily:"'DM Sans',sans-serif"}}>Get started</button>
-        {isMobile&&<button onClick={scrollToVis} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:50,padding:"8px 14px",fontSize:12,fontWeight:500,color:C.text,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",whiteSpace:"nowrap"}}>✦ Visualize</button>}
+        {!isMobile&&<button className="mg" style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:C.text,padding:"8px 14px",borderRadius:50,transition:"background .15s",fontFamily:"'Montserrat',sans-serif"}}>Sign in</button>}
+        <button className="ma" style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:isMobile?"9px 16px":"10px 22px",fontSize:isMobile?13:15,fontWeight:600,cursor:"pointer",transition:"background .2s",fontFamily:"'Montserrat',sans-serif"}}>Get started</button>
+        {isMobile&&<button onClick={scrollToVis} style={{background:"none",border:`1px solid ${C.green}`,borderRadius:50,padding:"8px 14px",fontSize:12,fontWeight:500,color:C.green,cursor:"pointer",fontFamily:"'Montserrat',sans-serif",whiteSpace:"nowrap"}}>✦ Visualize</button>}
       </div>
     </nav>
   );
@@ -131,12 +131,12 @@ function HeroSection({activePropType,setActivePropType,scrollToVis,isMobile,isTa
           <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?36:isTablet?44:54,lineHeight:1.1,fontWeight:400}}>Stay somewhere <em style={{fontStyle:"italic",color:C.accent}}>designed</em> to be remembered.</h1>
           <p style={{fontSize:isMobile?15:16,color:C.muted,lineHeight:1.75,marginTop:20,maxWidth:440}}>A curated collection of private homes — and a built-in AI visualizer that lets you redesign any room in seconds.</p>
           <div style={{marginTop:28,display:"flex",gap:10}}>
-            <input placeholder="Where to? Try Kyoto, Lisbon, Big Sur…" style={{flex:1,minWidth:0,border:`1.5px solid ${C.border}`,borderRadius:50,padding:isMobile?"11px 16px":"13px 22px",fontSize:isMobile?14:15,background:C.white,outline:"none",color:C.text,fontFamily:"'DM Sans',sans-serif"}}/>
-            <button className="ma" style={{background:C.accent,color:"white",border:"none",borderRadius:50,padding:isMobile?"11px 18px":"13px 26px",fontSize:isMobile?14:15,fontWeight:600,cursor:"pointer",transition:"background .2s",whiteSpace:"nowrap",fontFamily:"'DM Sans',sans-serif"}}>Search</button>
+            <input placeholder="Where to? Try Kyoto, Lisbon, Big Sur…" style={{flex:1,minWidth:0,border:`1.5px solid ${C.border}`,borderRadius:50,padding:isMobile?"11px 16px":"13px 22px",fontSize:isMobile?14:15,background:C.white,outline:"none",color:C.text,fontFamily:"'Montserrat',sans-serif"}}/>
+            <button className="ma" style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:isMobile?"11px 18px":"13px 26px",fontSize:isMobile?14:15,fontWeight:600,cursor:"pointer",transition:"background .2s",whiteSpace:"nowrap",fontFamily:"'Montserrat',sans-serif"}}>Search</button>
           </div>
           <div style={{marginTop:20,display:"flex",gap:7,flexWrap:"wrap"}}>
             {PROPERTY_TYPES.map((t,i)=>(
-              <button key={t} onClick={()=>setActivePropType(t)} style={{border:activePropType===t&&i!==0?`1.5px solid ${C.text}`:i===0&&activePropType==="All"?"none":`1px solid ${C.border}`,background:activePropType===t?(i===0?C.green:"white"):"transparent",color:activePropType===t?(i===0?"white":C.text):C.text,borderRadius:50,padding:isMobile?"7px 14px":"8px 18px",fontSize:isMobile?13:14,cursor:"pointer",fontWeight:activePropType===t?600:400,transition:"all .15s",fontFamily:"'DM Sans',sans-serif"}}>{t}</button>
+              <button key={t} onClick={()=>setActivePropType(t)} style={{border:activePropType===t&&i!==0?`1.5px solid ${C.text}`:i===0&&activePropType==="All"?"none":`1px solid ${C.border}`,background:activePropType===t?(i===0?C.green:"white"):"transparent",color:activePropType===t?(i===0?"white":C.text):C.text,borderRadius:50,padding:isMobile?"7px 14px":"8px 18px",fontSize:isMobile?13:14,cursor:"pointer",fontWeight:activePropType===t?600:400,transition:"all .15s",fontFamily:"'Montserrat',sans-serif"}}>{t}</button>
             ))}
           </div>
         </div>
@@ -163,7 +163,7 @@ function HeroSection({activePropType,setActivePropType,scrollToVis,isMobile,isTa
                 <p style={{color:"white",fontFamily:"'Playfair Display',serif",fontSize:20,lineHeight:1.3}}>Terracotta light, the way it should be.</p>
               </div>
             </div>
-            <button onClick={scrollToVis} className="ma" style={{position:"absolute",top:18,right:18,background:C.accent,color:"white",border:"none",borderRadius:50,padding:"8px 16px",fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"background .2s",fontFamily:"'DM Sans',sans-serif"}}><span style={{fontSize:9}}>✦</span> Try Visualizer</button>
+            <button onClick={scrollToVis} className="ma" style={{position:"absolute",top:18,right:18,background:C.green,color:"white",border:"none",borderRadius:50,padding:"8px 16px",fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,transition:"background .2s",fontFamily:"'Montserrat',sans-serif"}}><span style={{fontSize:9}}>✦</span> Try Visualizer</button>
           </div>
         )}
       </div>
@@ -179,7 +179,7 @@ function VisualizerSection({isMobile,isTablet}){
   const fileRef=useRef(null);
   const [activeTab,setActiveTab]=useState("walls");
   const [selectedColor,setSelectedColor]=useState(null);
-  const [customHex,setCustomHex]=useState("#C4503A");
+  const [customHex,setCustomHex]=useState("#E0A96D");
   const [useCustom,setUseCustom]=useState(false);
   const [selectedStyle,setSelectedStyle]=useState(null);
   const [selectedFurniture,setSelectedFurniture]=useState([]);
@@ -362,14 +362,14 @@ function VisualizerSection({isMobile,isTablet}){
 
         {!uploaded?(
           <div className="mup" onDragOver={e=>{e.preventDefault();setIsDragging(true);}} onDragLeave={()=>setIsDragging(false)} onDrop={handleDrop} onClick={()=>fileRef.current?.click()}
-            style={{border:`2px dashed ${isDragging?C.accent:C.border}`,borderRadius:20,padding:isMobile?"52px 24px":"88px 40px",textAlign:"center",background:isDragging?"rgba(196,80,58,.04)":C.card,transition:"all .2s",cursor:"pointer"}}>
+            style={{border:`2px dashed ${isDragging?C.accent:C.border}`,borderRadius:20,padding:isMobile?"52px 24px":"88px 40px",textAlign:"center",background:isDragging?"rgba(224,169,109,.04)":C.card,transition:"all .2s",cursor:"pointer"}}>
             <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={e=>handleFile(e.target.files[0])}/>
-            <div style={{width:64,height:64,borderRadius:"50%",background:"rgba(196,80,58,.1)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 18px"}}>
+            <div style={{width:64,height:64,borderRadius:"50%",background:"rgba(224,169,109,.1)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 18px"}}>
               <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 6v14M10 12l6-6 6 6M6 24h20" stroke={C.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
             <p style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?20:24,color:C.text,marginBottom:10}}>Drop your room photo here</p>
             <p style={{color:C.muted,fontSize:isMobile?13:15,marginBottom:24}}>or tap to browse — JPG, PNG, WEBP, HEIC</p>
-            <button className="ma" style={{background:C.accent,color:"white",border:"none",borderRadius:50,padding:"12px 28px",fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>Choose Photo</button>
+            <button className="ma" style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:"12px 28px",fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>Choose Photo</button>
           </div>
         ):(
           <div style={{display:"grid",gridTemplateColumns:isMobile||isTablet?"1fr":"300px 1fr",gap:isMobile?0:28,alignItems:"start"}}>
@@ -395,7 +395,7 @@ function VisualizerSection({isMobile,isTablet}){
             <div>
               {isMobile&&(
                 <div style={{borderRadius:16,border:`1px solid ${C.border}`,overflow:"hidden",marginBottom:14}}>
-                  <button onClick={()=>setControlsOpen(o=>!o)} style={{width:"100%",background:C.card,border:"none",padding:"15px 18px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>
+                  <button onClick={()=>setControlsOpen(o=>!o)} style={{width:"100%",background:C.card,border:"none",padding:"15px 18px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>
                     <span style={{fontFamily:"'Playfair Display',serif",fontSize:16,fontWeight:600}}>Design Studio</span>
                     <div style={{display:"flex",alignItems:"center",gap:10}}>
                       {activeCount>0&&<span style={{background:C.accent,color:"white",borderRadius:50,padding:"2px 10px",fontSize:12,fontWeight:600}}>{activeCount}</span>}
@@ -426,7 +426,7 @@ function VisualizerSection({isMobile,isTablet}){
                     style={{position:"absolute",left:`${item.x}%`,top:`${item.y}%`,transform:"translate(-50%,-50%)",zIndex:10,cursor:"grab",filter:"drop-shadow(0 3px 6px rgba(0,0,0,.35))"}}>
                     <div style={{position:"relative",display:"inline-block"}}>
                       <span style={{fontSize:item.sz,display:"block",lineHeight:1}}>{item.icon}</span>
-                      <button onClick={e=>{e.stopPropagation();removeFromCanvas(item.id);}} style={{position:"absolute",top:-8,right:-8,width:18,height:18,borderRadius:"50%",background:C.accent,border:"none",color:"white",fontSize:11,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:11}}>×</button>
+                      <button onClick={e=>{e.stopPropagation();removeFromCanvas(item.id);}} style={{position:"absolute",top:-8,right:-8,width:18,height:18,borderRadius:"50%",background:C.green,border:"none",color:"white",fontSize:11,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:11}}>×</button>
                     </div>
                   </div>
                 ))}
@@ -441,12 +441,12 @@ function VisualizerSection({isMobile,isTablet}){
                         draggable={false}
                       />
                       {/* × remove */}
-                      <button onClick={e=>{e.stopPropagation();removeProduct(prod.id);}} style={{position:"absolute",top:-10,left:-10,width:20,height:20,borderRadius:"50%",background:C.accent,border:"none",color:"white",fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:14,lineHeight:1}}>×</button>
+                      <button onClick={e=>{e.stopPropagation();removeProduct(prod.id);}} style={{position:"absolute",top:-10,left:-10,width:20,height:20,borderRadius:"50%",background:C.green,border:"none",color:"white",fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:14,lineHeight:1}}>×</button>
                       {/* blend toggle */}
                       <button onClick={e=>{e.stopPropagation();toggleBlend(prod.id);}} title={prod.blend==="multiply"?"White bg removed (multiply)":"Normal blend"} style={{position:"absolute",top:-10,right:-10,width:20,height:20,borderRadius:"50%",background:prod.blend==="multiply"?C.green:"rgba(0,0,0,.5)",border:"none",color:"white",fontSize:9,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:14,lineHeight:1,fontWeight:700}}>BG</button>
                       {/* resize handle */}
                       <div onMouseDown={e=>{e.stopPropagation();productResizeDrag.current={id:prod.id,startX:e.clientX,startScale:prod.scale};}} onTouchStart={e=>{e.stopPropagation();productResizeDrag.current={id:prod.id,startX:e.touches[0].clientX,startScale:prod.scale};}}
-                        style={{position:"absolute",bottom:-8,right:-8,width:16,height:16,background:"white",border:`2px solid ${C.accent}`,borderRadius:3,cursor:"se-resize",zIndex:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.accent}}>⤡</div>
+                        style={{position:"absolute",bottom:-8,right:-8,width:16,height:16,background:"white",border:`2px solid ${C.green}`,borderRadius:3,cursor:"se-resize",zIndex:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.accent}}>⤡</div>
                       {/* label */}
                       <div style={{position:"absolute",bottom:-26,left:"50%",transform:"translateX(-50%)",background:"rgba(0,0,0,.6)",color:"white",borderRadius:50,padding:"2px 8px",fontSize:9,whiteSpace:"nowrap",fontWeight:500,pointerEvents:"none"}}>{prod.name.slice(0,18)}</div>
                     </div>
@@ -459,8 +459,8 @@ function VisualizerSection({isMobile,isTablet}){
               <p style={{textAlign:"center",fontSize:12,color:C.muted,marginTop:8}}>← Drag center handle to compare · Tap + in Stage tab to add furniture · Drag pieces to position</p>
               {isMobile&&<ActionButtons isGenerating={isGenerating} loadingDot={loadingDot} generateVision={generateVision} reset={reset}/>}
               {isGenerating&&<div style={{marginTop:20,background:C.green,borderRadius:18,padding:"24px 28px",display:"flex",alignItems:"center",gap:18,animation:"fadeUp .4s ease both"}}><div style={{width:40,height:40,borderRadius:"50%",border:"2px solid rgba(255,255,255,.2)",borderTopColor:C.accent,animation:"spin 1s linear infinite",flexShrink:0}}/><div><p style={{color:"white",fontFamily:"'Playfair Display',serif",fontSize:17}}>Designing your space{".".repeat(loadingDot)}</p><p style={{color:"rgba(255,255,255,.5)",fontSize:13,marginTop:4}}>Reading light, proportions, your selections…</p></div></div>}
-              {viewingSaved&&!isGenerating&&<VisionCard text={viewingSaved.text} label={viewingSaved.label} onRegenerate={null} extra={<button onClick={()=>setViewingSaved(null)} style={{background:"rgba(255,255,255,.1)",color:"rgba(255,255,255,.8)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"9px 18px",fontSize:13,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>← Back to current</button>} isMobile={isMobile}/>}
-              {designVision&&!isGenerating&&!viewingSaved&&<VisionCard text={designVision} label="AI Design Vision" onRegenerate={generateVision} extra={savedVisions.length<3&&<button onClick={saveVision} style={{background:"rgba(255,255,255,.1)",color:"rgba(255,255,255,.8)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"9px 18px",fontSize:13,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>Save Vision {savedVisions.length+1}/3</button>} isMobile={isMobile}/>}
+              {viewingSaved&&!isGenerating&&<VisionCard text={viewingSaved.text} label={viewingSaved.label} onRegenerate={null} extra={<button onClick={()=>setViewingSaved(null)} style={{background:"rgba(255,255,255,.1)",color:"rgba(255,255,255,.8)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"9px 18px",fontSize:13,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>← Back to current</button>} isMobile={isMobile}/>}
+              {designVision&&!isGenerating&&!viewingSaved&&<VisionCard text={designVision} label="AI Design Vision" onRegenerate={generateVision} extra={savedVisions.length<3&&<button onClick={saveVision} style={{background:"rgba(255,255,255,.1)",color:"rgba(255,255,255,.8)",border:"1px solid rgba(255,255,255,.2)",borderRadius:50,padding:"9px 18px",fontSize:13,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>Save Vision {savedVisions.length+1}/3</button>} isMobile={isMobile}/>}
               {!designVision&&!isGenerating&&!viewingSaved&&<div style={{marginTop:20,padding:isMobile?"22px 20px":"26px 32px",background:C.card,borderRadius:18,border:`1px solid ${C.border}`,textAlign:"center"}}><p style={{fontFamily:"'Playfair Display',serif",fontSize:18,color:C.text,marginBottom:8}}>Your design vision awaits.</p><p style={{fontSize:14,color:C.muted,lineHeight:1.7}}>Drag the slider to preview · Stage furniture · Then hit <strong>Generate AI Vision</strong>.</p></div>}
             </div>
           </div>
@@ -474,7 +474,7 @@ function RoomIntelligence({analysis,isAnalyzing,open,setOpen,isMobile}){
   if(!isAnalyzing&&!analysis)return null;
   return(
     <div style={{marginBottom:16,borderRadius:16,border:`1px solid ${C.border}`,overflow:"hidden",animation:"fadeUp .5s ease both"}}>
-      <button onClick={()=>setOpen(o=>!o)} style={{width:"100%",background:"linear-gradient(135deg,#2B4438 0%,#1E3028 100%)",border:"none",padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>
+      <button onClick={()=>setOpen(o=>!o)} style={{width:"100%",background:"linear-gradient(135deg,#1C2A38 0%,#141E2B 100%)",border:"none",padding:"14px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
           <span style={{fontSize:15}}>✦</span>
           <span style={{color:"white",fontWeight:600,fontSize:14}}>Room Intelligence</span>
@@ -484,7 +484,7 @@ function RoomIntelligence({analysis,isAnalyzing,open,setOpen,isMobile}){
         {analysis&&<span style={{color:"rgba(255,255,255,.5)",fontSize:16,transform:open?"rotate(180deg)":"none",transition:"transform .2s",display:"inline-block"}}>⌄</span>}
       </button>
       {open&&analysis&&(
-        <div style={{background:"#F0EDE8",padding:"18px 20px"}}>
+        <div style={{background:"#EEF2F5",padding:"18px 20px"}}>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"1fr 1fr 1fr",gap:10,marginBottom:14}}>
             {[["🎨","Current Style",analysis.currentStyle],["☀","Light Quality",analysis.lightQuality],["✦","Suggested Style",analysis.suggestedStyle]].map(([icon,label,val])=>(
               <div key={label} style={{background:"white",borderRadius:10,padding:"10px 12px",border:`1px solid ${C.border}`}}>
@@ -534,7 +534,7 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
     <>
       <div style={{display:"flex",borderBottom:`1px solid ${C.border}`,marginBottom:16,overflowX:"auto"}}>
         {[["walls","Walls"],["style","Style"],["stage","Stage"],["quick","Quick"],["saved","Saved"]].map(([key,label])=>(
-          <button key={key} onClick={()=>setActiveTab(key)} style={{flex:1,background:"none",border:"none",borderBottom:activeTab===key?`2.5px solid ${C.accent}`:"2.5px solid transparent",padding:"9px 4px",fontSize:12,fontWeight:activeTab===key?600:400,color:activeTab===key?C.accent:C.muted,cursor:"pointer",whiteSpace:"nowrap",fontFamily:"'DM Sans',sans-serif"}}>{label}</button>
+          <button key={key} onClick={()=>setActiveTab(key)} style={{flex:1,background:"none",border:"none",borderBottom:activeTab===key?`2.5px solid ${C.accent}`:"2.5px solid transparent",padding:"9px 4px",fontSize:12,fontWeight:activeTab===key?600:400,color:activeTab===key?C.accent:C.muted,cursor:"pointer",whiteSpace:"nowrap",fontFamily:"'Montserrat',sans-serif"}}>{label}</button>
         ))}
       </div>
 
@@ -544,13 +544,13 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>
             {WALL_COLORS.map(c=>{const active=!useCustom&&selectedColor?.name===c.name;return(
               <button key={c.name} className="mchip" onClick={()=>{setSelectedColor(active?null:c);setUseCustom(false);}}
-                style={{border:active?`2px solid ${C.accent}`:`1px solid ${C.border}`,borderRadius:11,padding:"8px 10px",cursor:"pointer",background:active?"rgba(196,80,58,.05)":"white",display:"flex",alignItems:"center",gap:8,textAlign:"left",transition:"all .2s",fontFamily:"'DM Sans',sans-serif"}}>
+                style={{border:active?`2px solid ${C.accent}`:`1px solid ${C.border}`,borderRadius:11,padding:"8px 10px",cursor:"pointer",background:active?"rgba(224,169,109,.05)":"white",display:"flex",alignItems:"center",gap:8,textAlign:"left",transition:"all .2s",fontFamily:"'Montserrat',sans-serif"}}>
                 <div style={{width:20,height:20,borderRadius:5,background:c.hex,border:"1px solid rgba(0,0,0,.1)",flexShrink:0}}/>
                 <span style={{fontSize:12,fontWeight:active?600:400,color:active?C.accent:C.text}}>{c.name}</span>
               </button>
             );})}
           </div>
-          <div style={{marginTop:10,padding:"12px 14px",background:useCustom?"rgba(196,80,58,.06)":"white",borderRadius:12,border:`${useCustom?2:1}px solid ${useCustom?C.accent:C.border}`,cursor:"pointer"}} onClick={()=>{setUseCustom(true);setSelectedColor(null);}}>
+          <div style={{marginTop:10,padding:"12px 14px",background:useCustom?"rgba(224,169,109,.06)":"white",borderRadius:12,border:`${useCustom?2:1}px solid ${useCustom?C.accent:C.border}`,cursor:"pointer"}} onClick={()=>{setUseCustom(true);setSelectedColor(null);}}>
             <div style={{display:"flex",alignItems:"center",gap:10}}>
               <input type="color" value={customHex} onChange={e=>{setCustomHex(e.target.value);setUseCustom(true);setSelectedColor(null);}} onClick={e=>e.stopPropagation()} style={{width:28,height:28,border:"none",borderRadius:6,cursor:"pointer",padding:0,background:"none"}}/>
               <div style={{flex:1}}>
@@ -560,7 +560,7 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
               {useCustom&&<span style={{color:C.accent,fontSize:16}}>✓</span>}
             </div>
           </div>
-          {(selectedColor||useCustom)&&<button onClick={()=>{setSelectedColor(null);setUseCustom(false);}} style={{width:"100%",marginTop:8,background:"none",border:`1px solid ${C.border}`,borderRadius:50,padding:"8px",fontSize:12,color:C.muted,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>Clear wall color</button>}
+          {(selectedColor||useCustom)&&<button onClick={()=>{setSelectedColor(null);setUseCustom(false);}} style={{width:"100%",marginTop:8,background:"none",border:`1px solid ${C.border}`,borderRadius:50,padding:"8px",fontSize:12,color:C.muted,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>Clear wall color</button>}
         </div>
       )}
 
@@ -571,7 +571,7 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
           <div style={{display:"flex",flexDirection:"column",gap:6}}>
             {STYLES.map(s=>{const active=selectedStyle===s.name;return(
               <button key={s.name} className="mrow" onClick={()=>setSelectedStyle(active?null:s.name)}
-                style={{border:active?`2px solid ${C.accent}`:`1px solid ${C.border}`,borderRadius:11,padding:"10px 13px",cursor:"pointer",background:active?"rgba(196,80,58,.05)":"white",textAlign:"left",transition:"all .15s",fontFamily:"'DM Sans',sans-serif"}}>
+                style={{border:active?`2px solid ${C.accent}`:`1px solid ${C.border}`,borderRadius:11,padding:"10px 13px",cursor:"pointer",background:active?"rgba(224,169,109,.05)":"white",textAlign:"left",transition:"all .15s",fontFamily:"'Montserrat',sans-serif"}}>
                 <div style={{display:"flex",alignItems:"center",gap:7}}><span style={{fontSize:13}}>{s.emoji}</span><span style={{fontWeight:600,fontSize:13,color:active?C.accent:C.text}}>{s.name}</span></div>
                 <div style={{fontSize:11,color:C.muted,marginTop:2,paddingLeft:20}}>{s.desc}</div>
               </button>
@@ -589,7 +589,7 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
                 <p style={{fontSize:13,fontWeight:600,color:C.text}}>📸 My Products</p>
                 <p style={{fontSize:11,color:C.muted,marginTop:2}}>Upload saved images from IKEA, Wayfair, Amazon, etc.</p>
               </div>
-              <label style={{background:C.accent,color:"white",borderRadius:50,padding:"6px 14px",fontSize:12,fontWeight:600,cursor:"pointer",flexShrink:0,fontFamily:"'DM Sans',sans-serif"}}>
+              <label style={{background:C.green,color:"white",borderRadius:50,padding:"6px 14px",fontSize:12,fontWeight:600,cursor:"pointer",flexShrink:0,fontFamily:"'Montserrat',sans-serif"}}>
                 + Add
                 <input type="file" accept="image/*" multiple style={{display:"none"}} onChange={e=>handleProductUpload(e.target.files)}/>
               </label>
@@ -604,7 +604,7 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
                       <p style={{fontSize:10,color:C.muted}}>On canvas · drag to position · ⤡ to resize</p>
                     </div>
                     <div style={{display:"flex",gap:5,flexShrink:0}}>
-                      <button onClick={()=>toggleBlend(prod.id)} title="Toggle white background removal" style={{background:prod.blend==="multiply"?C.green:C.border,color:"white",border:"none",borderRadius:50,padding:"3px 8px",fontSize:9,fontWeight:700,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>BG {prod.blend==="multiply"?"ON":"OFF"}</button>
+                      <button onClick={()=>toggleBlend(prod.id)} title="Toggle white background removal" style={{background:prod.blend==="multiply"?C.green:C.border,color:"white",border:"none",borderRadius:50,padding:"3px 8px",fontSize:9,fontWeight:700,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>BG {prod.blend==="multiply"?"ON":"OFF"}</button>
                       <button onClick={()=>removeProduct(prod.id)} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:50,width:22,height:22,fontSize:13,color:C.muted,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>×</button>
                     </div>
                   </div>
@@ -629,7 +629,7 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
                   <div style={{fontSize:13,fontWeight:500,color:C.text}}>{f.name}</div>
                   <div style={{fontSize:10,color:C.muted}}>{f.cat}{placed>0?` · ${placed} placed`:""}</div>
                 </div>
-                <button onClick={()=>addToCanvas(f)} className="ma" style={{background:C.accent,color:"white",border:"none",borderRadius:50,width:26,height:26,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,lineHeight:1,transition:"background .2s"}}>+</button>
+                <button onClick={()=>addToCanvas(f)} className="ma" style={{background:C.accent,color:C.green,border:"none",borderRadius:50,width:26,height:26,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,lineHeight:1,transition:"background .2s"}}>+</button>
               </div>
             );})}
           </div>
@@ -642,14 +642,14 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
           <div style={{display:"flex",flexDirection:"column",gap:8}}>
             {QUICK_TRANSFORMS.map(qt=>(
               <button key={qt.name} className="mqt" onClick={()=>applyQuickTransform(qt)}
-                style={{border:`1px solid ${C.border}`,borderRadius:14,padding:"12px 14px",cursor:"pointer",background:"white",textAlign:"left",transition:"all .2s",fontFamily:"'DM Sans',sans-serif"}}>
+                style={{border:`1px solid ${C.border}`,borderRadius:14,padding:"12px 14px",cursor:"pointer",background:"white",textAlign:"left",transition:"all .2s",fontFamily:"'Montserrat',sans-serif"}}>
                 <div style={{display:"flex",alignItems:"center",gap:10}}>
                   <span style={{fontSize:22}}>{qt.emoji}</span>
                   <div style={{flex:1}}><div style={{fontWeight:600,fontSize:14,color:C.text}}>{qt.name}</div><div style={{fontSize:11,color:C.muted,marginTop:2}}>{qt.desc}</div></div>
                   <div style={{width:16,height:16,borderRadius:"50%",background:WALL_COLORS.find(c=>c.name===qt.color)?.hex||"#ccc",border:"1px solid rgba(0,0,0,.1)",flexShrink:0}}/>
                 </div>
                 <div style={{marginTop:8,display:"flex",gap:5,flexWrap:"wrap"}}>
-                  <span style={{background:"rgba(196,80,58,.08)",color:C.accent,borderRadius:50,padding:"2px 8px",fontSize:10,fontWeight:600}}>{qt.style}</span>
+                  <span style={{background:"rgba(224,169,109,.08)",color:C.accent,borderRadius:50,padding:"2px 8px",fontSize:10,fontWeight:600}}>{qt.style}</span>
                   {qt.furniture.slice(0,3).map(f=><span key={f} style={{background:C.card,color:C.muted,borderRadius:50,padding:"2px 8px",fontSize:10}}>{f}</span>)}
                   {qt.furniture.length>3&&<span style={{color:C.muted,fontSize:10,lineHeight:"20px"}}>+{qt.furniture.length-3}</span>}
                 </div>
@@ -677,8 +677,8 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
                       <p style={{fontSize:11,color:C.muted,marginTop:2}}>{[v.color?.name,v.style,v.furniture?.length?v.furniture.length+" items":null].filter(Boolean).join(" · ")||"No selections"}</p>
                     </div>
                     <div style={{display:"flex",gap:7}}>
-                      <button onClick={()=>setViewingSaved(v)} style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:"5px 12px",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>View</button>
-                      <button onClick={()=>setSavedVisions(prev=>prev.filter(x=>x.id!==v.id))} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:50,padding:"5px 10px",fontSize:12,color:C.muted,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>✕</button>
+                      <button onClick={()=>setViewingSaved(v)} style={{background:C.accent,color:C.green,border:"none",borderRadius:50,padding:"5px 12px",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>View</button>
+                      <button onClick={()=>setSavedVisions(prev=>prev.filter(x=>x.id!==v.id))} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:50,padding:"5px 10px",fontSize:12,color:C.muted,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>✕</button>
                     </div>
                   </div>
                   <div style={{padding:"10px 14px",background:"white"}}><p style={{fontSize:12,color:C.muted,lineHeight:1.6}}>{v.text.replace(/\*\*/g,"").slice(0,110)}…</p></div>
@@ -696,10 +696,10 @@ function ActionButtons({isGenerating,loadingDot,generateVision,reset}){
   return(
     <div style={{marginTop:16}}>
       <button onClick={generateVision} disabled={isGenerating} className={isGenerating?"":"ma"}
-        style={{width:"100%",background:isGenerating?C.muted:C.green,color:"white",border:"none",borderRadius:50,padding:"14px",fontSize:15,fontWeight:600,cursor:isGenerating?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .2s",fontFamily:"'DM Sans',sans-serif"}}>
+        style={{width:"100%",background:isGenerating?C.muted:C.green,color:"white",border:"none",borderRadius:50,padding:"14px",fontSize:15,fontWeight:600,cursor:isGenerating?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background .2s",fontFamily:"'Montserrat',sans-serif"}}>
         {isGenerating?<><span style={{display:"inline-block",animation:"spin 1s linear infinite"}}>⟳</span>Designing{".".repeat(loadingDot)}</>:<><span style={{fontSize:10}}>✦</span>Generate AI Vision</>}
       </button>
-      <button onClick={reset} style={{width:"100%",background:"none",border:`1px solid ${C.border}`,borderRadius:50,padding:"11px",fontSize:13,color:C.muted,cursor:"pointer",marginTop:8,fontFamily:"'DM Sans',sans-serif"}}>Upload Different Photo</button>
+      <button onClick={reset} style={{width:"100%",background:"none",border:`1px solid ${C.border}`,borderRadius:50,padding:"11px",fontSize:13,color:C.muted,cursor:"pointer",marginTop:8,fontFamily:"'Montserrat',sans-serif"}}>Upload Different Photo</button>
     </div>
   );
 }
@@ -711,13 +711,13 @@ function VisionCard({text,label,onRegenerate,extra,isMobile}){
       <p style={{color:"rgba(255,255,255,.5)",fontSize:11,letterSpacing:".18em",textTransform:"uppercase",marginBottom:18}}>— {label}</p>
       <div style={{fontFamily:"'Playfair Display',serif",fontSize:16,lineHeight:1.85,color:"rgba(255,255,255,.9)"}}>
         {parts.map((p,i)=>{
-          if(p.startsWith("**")&&p.endsWith("**"))return<p key={i} style={{color:"#E8C5A0",fontWeight:600,fontSize:11,letterSpacing:".14em",textTransform:"uppercase",margin:i===0?"0 0 8px":"18px 0 8px",fontFamily:"'DM Sans',sans-serif"}}>{p.slice(2,-2)}</p>;
+          if(p.startsWith("**")&&p.endsWith("**"))return<p key={i} style={{color:"#E0A96D",fontWeight:600,fontSize:11,letterSpacing:".14em",textTransform:"uppercase",margin:i===0?"0 0 8px":"18px 0 8px",fontFamily:"'Montserrat',sans-serif"}}>{p.slice(2,-2)}</p>;
           if(!p.trim())return null;
           return<p key={i} style={{marginBottom:4}}>{p.trim()}</p>;
         })}
       </div>
       <div style={{marginTop:22,paddingTop:18,borderTop:"1px solid rgba(255,255,255,.12)",display:"flex",gap:10,flexWrap:"wrap"}}>
-        {onRegenerate&&<button onClick={onRegenerate} className="ma" style={{background:C.accent,color:"white",border:"none",borderRadius:50,padding:"9px 20px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>Regenerate ⟳</button>}
+        {onRegenerate&&<button onClick={onRegenerate} className="ma" style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:"9px 20px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>Regenerate ⟳</button>}
         {extra}
       </div>
     </div>
@@ -752,7 +752,7 @@ function FeaturedStays({isMobile,isTablet}){
             <p style={{color:C.accent,fontSize:11,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",marginBottom:10}}>— Featured Properties</p>
             <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?26:36,fontWeight:400}}>Homes designed to be remembered.</h2>
           </div>
-          <button className="mg" style={{background:"none",border:`1.5px solid ${C.border}`,borderRadius:50,padding:"10px 20px",fontSize:14,fontWeight:500,color:C.text,cursor:"pointer",fontFamily:"'DM Sans',sans-serif",whiteSpace:"nowrap"}}>View all →</button>
+          <button className="mg" style={{background:"none",border:`1.5px solid ${C.border}`,borderRadius:50,padding:"10px 20px",fontSize:14,fontWeight:500,color:C.text,cursor:"pointer",fontFamily:"'Montserrat',sans-serif",whiteSpace:"nowrap"}}>View all →</button>
         </div>
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":isTablet?"1fr 1fr":"repeat(4,1fr)",gap:isMobile?12:20}}>
           {stays.map(({title,location,type,price,palette})=>(
@@ -765,7 +765,7 @@ function FeaturedStays({isMobile,isTablet}){
                 <p style={{fontSize:12,color:C.muted,marginBottom:10}}>{location}</p>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                   <span style={{fontSize:isMobile?13:14,fontWeight:600}}>{price}</span>
-                  <button className="ma" style={{background:C.accent,color:"white",border:"none",borderRadius:50,padding:"5px 12px",fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>View</button>
+                  <button className="ma" style={{background:C.accent,color:C.green,border:"none",borderRadius:50,padding:"5px 12px",fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>View</button>
                 </div>
               </div>
             </div>
@@ -857,7 +857,7 @@ function GallerySection({isMobile,isTablet}){
           })}
         </div>
         <div style={{textAlign:"center",marginTop:32}}>
-          <button className="mg" style={{background:"none",border:`1.5px solid ${C.border}`,borderRadius:50,padding:"12px 28px",fontSize:14,fontWeight:500,color:C.text,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>View full gallery →</button>
+          <button className="mg" style={{background:"none",border:`1.5px solid ${C.border}`,borderRadius:50,padding:"12px 28px",fontSize:14,fontWeight:500,color:C.text,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>View full gallery →</button>
         </div>
       </div>
     </section>
@@ -868,8 +868,8 @@ function GallerySection({isMobile,isTablet}){
 function TestimonialsSection({isMobile,isTablet}){
   const px=isMobile?"20px":isTablet?"32px":"48px";
   const reviews=[
-    {initials:"SK",color:"#C4503A",name:"Sarah K.",role:"Interior Designer, Chicago",quote:"I sent clients a link to their room with the AI vision already generated. They approved the whole redesign in one meeting. Hasn't happened in 15 years of practice.",stars:5},
-    {initials:"MR",color:"#2B4438",name:"Marcus R.",role:"AirBnb Superhost, Nashville",quote:"Uploaded my guest room, hit AirBnb Ready, generated the vision. My bookings went up 40% after I used it to plan the actual renovation. The before/after slider sold my contractor on every choice.",stars:5},
+    {initials:"SK",color:"#E0A96D",name:"Sarah K.",role:"Interior Designer, Chicago",quote:"I sent clients a link to their room with the AI vision already generated. They approved the whole redesign in one meeting. Hasn't happened in 15 years of practice.",stars:5},
+    {initials:"MR",color:"#1C2A38",name:"Marcus R.",role:"AirBnb Superhost, Nashville",quote:"Uploaded my guest room, hit AirBnb Ready, generated the vision. My bookings went up 40% after I used it to plan the actual renovation. The before/after slider sold my contractor on every choice.",stars:5},
     {initials:"JL",color:"#9D8FA8",name:"Jordan L.",role:"First-time homeowner, Austin",quote:"I don't have a design eye at all. I took a picture of my living room, uploaded a sofa I found on Wayfair, and the AI told me exactly why it would or wouldn't work. Saved me from a $1,400 mistake.",stars:5},
     {initials:"AP",color:"#C9A87C",name:"Alicia P.",role:"Property Manager, Miami",quote:"We stage five units a month. The Quick Transform presets cut our decision time in half. Minimal Reset before photos, then Cozy Sanctuary for the listing shots. Every time.",stars:5},
   ];
@@ -879,7 +879,7 @@ function TestimonialsSection({isMobile,isTablet}){
         <div style={{textAlign:"center",marginBottom:isMobile?40:60}}>
           <p style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",marginBottom:16}}>— What People Are Saying</p>
           <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?30:46,fontWeight:400,color:"white",lineHeight:1.15}}>
-            Real spaces.<br/><em style={{fontStyle:"italic",color:"#E8C5A0"}}>Real transformation.</em>
+            Real spaces.<br/><em style={{fontStyle:"italic",color:"#E0A96D"}}>Real transformation.</em>
           </h2>
           <p style={{color:"rgba(255,255,255,.55)",fontSize:isMobile?14:17,maxWidth:480,margin:"20px auto 0",lineHeight:1.75}}>
             Don't guess. Don't outsource. See it designed for your exact room before a single thing moves.
@@ -889,7 +889,7 @@ function TestimonialsSection({isMobile,isTablet}){
           {reviews.map((r,i)=>(
             <div key={i} style={{background:"rgba(255,255,255,.07)",borderRadius:20,padding:"24px 22px",border:"1px solid rgba(255,255,255,.1)",backdropFilter:"blur(4px)"}}>
               <div style={{display:"flex",gap:3,marginBottom:16}}>
-                {Array(r.stars).fill(0).map((_,s)=><span key={s} style={{color:"#E8C5A0",fontSize:13}}>★</span>)}
+                {Array(r.stars).fill(0).map((_,s)=><span key={s} style={{color:"#E0A96D",fontSize:13}}>★</span>)}
               </div>
               <p style={{fontFamily:"'Playfair Display',serif",fontSize:15,color:"rgba(255,255,255,.9)",lineHeight:1.75,marginBottom:20,fontStyle:"italic"}}>"{r.quote}"</p>
               <div style={{display:"flex",alignItems:"center",gap:12,paddingTop:16,borderTop:"1px solid rgba(255,255,255,.1)"}}>
@@ -917,14 +917,14 @@ function Footer({isMobile,isTablet}){
     {heading:"Legal",links:["Terms & Conditions","Privacy Policy","Cookie Policy","Acceptable Use","Data Processing"]},
   ];
   return(
-    <footer style={{background:"#111009",padding:`${isMobile?48:64}px ${px} ${isMobile?32:40}px`}}>
+    <footer style={{background:"#0E1520",padding:`${isMobile?48:64}px ${px} ${isMobile?32:40}px`}}>
       <div style={{maxWidth:1140,margin:"0 auto"}}>
         {/* Top row */}
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":isTablet?"1fr 1fr 1fr":"1.8fr 1fr 1fr 1fr",gap:isMobile?36:48,marginBottom:isMobile?40:56}}>
           {/* Brand column */}
           <div>
             <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:20}}>
-              <div style={{width:30,height:30,borderRadius:"50%",background:C.accent,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <div style={{width:30,height:30,borderRadius:"50%",background:C.green,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                 <span style={{color:"white",fontSize:13,fontWeight:700}}>M</span>
               </div>
               <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:20,letterSpacing:"-0.4px",color:"white"}}>md escapes</span>
