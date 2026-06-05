@@ -114,8 +114,7 @@ function Nav({activeSection,setActiveSection,scrollToVis,scrollToFaq,openContact
   return(
     <nav style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:isMobile?"14px 20px":"16px 48px",borderBottom:`1px solid ${C.border}`,background:C.bg,position:"sticky",top:0,zIndex:300}}>
       <div style={{display:"flex",alignItems:"center",gap:12}}>
-        <img src="/MDESCAPESLOGO.png" style={{width:isMobile?32:38,height:"auto",borderRadius:4}} alt="MDEscapes Logo" />
-        <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:isMobile?16:19,letterSpacing:"-0.4px"}}>md escapes</span>
+        <img src="/MDESCAPESLOGO.png" style={{width:isMobile?110:140,height:"auto",borderRadius:4}} alt="MDEscapes Logo" />
       </div>
       {!isMobile&&<div style={{display:"flex",gap:28,alignItems:"center"}}>
         <button className="mnl" onClick={()=>setActiveSection("stays")} style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:activeSection==="stays"?C.accent:C.text,transition:"color .2s",fontFamily:"'Montserrat',sans-serif"}}>Stays</button>
@@ -964,8 +963,7 @@ function Footer({openContact,isMobile,isTablet}){
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":isTablet?"1fr 1fr 1fr":"1.8fr 1fr 1fr 1fr",gap:isMobile?36:48,marginBottom:isMobile?40:56}}>
           <div>
             <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
-              <img src="/MDESCAPESLOGO.png" style={{width:32,height:"auto",borderRadius:4,filter:"brightness(1.2)"}} alt="Logo" />
-              <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:20,letterSpacing:"-0.4px",color:"white"}}>md escapes</span>
+              <img src="/MDESCAPESLOGO.png" style={{width:isMobile?110:140,height:"auto",borderRadius:4,filter:"brightness(1.2)"}} alt="Logo" />
             </div>
             <p style={{color:"rgba(255,255,255,.4)",fontSize:14,lineHeight:1.75,maxWidth:260,marginBottom:24}}>Private stays, designed slowly. Visualize any room before you book — or before you build.</p>
             <button onClick={openContact} className="ma" style={{background:C.accent,color:C.green,border:"none",borderRadius:50,padding:"10px 22px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>Contact Support</button>
