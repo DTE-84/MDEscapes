@@ -65,3 +65,39 @@ button, input, select, textarea {
     scroll-behavior: auto !important;
   }
 }
+
+/* Custom Utility Helpers */
+.bg-canvas { background-color: var(--color-bg-canvas); }
+.border-chrome { border: 1px solid var(--color-secondary); }
+
+.btn-primary {
+  font-family: var(--font-body);
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 24px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.badge-accent {
+  font-family: var(--font-body);
+  background: rgba(224, 169, 109, 0.15); /* Light opacity alpha mix of Sandy Oak */
+  color: var(--color-primary);
+  border: 1px solid rgba(224, 169, 109, 0.4);
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* End Custom Utility Helpers */
