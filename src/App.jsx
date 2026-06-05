@@ -959,7 +959,7 @@ function Footer({isMobile,isTablet}){
         </div>
         {/* Bottom bar */}
         <div style={{borderTop:"1px solid rgba(255,255,255,.08)",paddingTop:24,display:"flex",alignItems:"center",justifyContent:"space-between",flexDirection:isMobile?"column":"row",gap:isMobile?12:0}}>
-          <p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 MD Escapes LLC · Private stays, designed slowly.</p>
+          <p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 DTE SOLUTIONS MD Escapes LLC · Private stays, designed slowly.</p>
           <div style={{display:"flex",gap:20}}>
             {["Privacy Policy","Terms & Conditions","Cookie Policy"].map(l=>(
               <a key={l} href="#" style={{color:"rgba(255,255,255,.25)",fontSize:12,textDecoration:"none"}}>{l}</a>
