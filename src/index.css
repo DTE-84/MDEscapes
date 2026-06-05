@@ -1,18 +1,42 @@
+/* Google Fonts Import */
+@import url('https://googleapis.com');
+
+/* Design Tokens (CSS Variables) */
+:root {
+  --color-bg-cream: #F7F3EE;
+  --color-bg-canvas: #FFFFFF;
+  --color-primary: #1C2A38;
+  --color-secondary: #7A8B99;
+  --color-accent: #E0A96D;
+  
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Montserrat', sans-serif;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: #F7F3EE;
-}
-
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-primary); /* Keeps body text tight with your main Navy color */
+  background: var(--color-bg-cream);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-primary);
+  font-weight: 700;
+  letter-spacing: 0.02em; /* Gives serif titles an elegant breathing room */
 }
 
 img {
@@ -20,10 +44,24 @@ img {
   display: block;
 }
 
-button {
+/* Inherit typography across all input vectors */
+button, input, select, textarea {
   font-family: inherit;
+  color: inherit;
 }
 
-input {
-  font-family: inherit;
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
