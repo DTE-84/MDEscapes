@@ -782,9 +782,9 @@ function Footer({isMobile}){
           <div style={{width:26,height:26,borderRadius:"50%",background:C.accent,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{color:"white",fontSize:11,fontWeight:700}}>M</span></div>
           <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:16,letterSpacing:"-0.3px",color:"white"}}>md escapes</span>
         </div>
-        {!isMobile&&<p style={{color:"rgba(255,255,255,.3)",fontSize:13}}>© 2026 MD Escapes. Private stays, designed slowly.</p>}
+        {!isMobile&&<p style={{color:"rgba(255,255,255,.3)",fontSize:13}}>© 2026 DTE SOLUTIONS MD Escapes. Private stays, designed slowly.</p>}
         <div style={{display:"flex",gap:20}}>{["Privacy","Terms","Contact"].map(l=><a key={l} href="#" style={{color:"rgba(255,255,255,.4)",fontSize:13,textDecoration:"none"}}>{l}</a>)}</div>
-        {isMobile&&<p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 MD Escapes</p>}
+        {isMobile&&<p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 DTE SOLUTIONS MD Escapes</p>}
       </div>
     </footer>
   );
