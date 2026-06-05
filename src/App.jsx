@@ -94,8 +94,10 @@ export default function MDEscapesApp() {
       <HeroSection activePropType={activePropType} setActivePropType={setActivePropType} scrollToVis={scrollToVis} isMobile={isMobile} isTablet={isTablet}/>
       <div ref={visRef}><VisualizerSection isMobile={isMobile} isTablet={isTablet}/></div>
       <HowItWorks isMobile={isMobile}/>
+      <GallerySection isMobile={isMobile} isTablet={isTablet}/>
+      <TestimonialsSection isMobile={isMobile} isTablet={isTablet}/>
       <FeaturedStays isMobile={isMobile} isTablet={isTablet}/>
-      <Footer isMobile={isMobile}/>
+      <Footer isMobile={isMobile} isTablet={isTablet}/>
     </div>
   );
 }
@@ -774,17 +776,196 @@ function FeaturedStays({isMobile,isTablet}){
   );
 }
 
-function Footer({isMobile}){
+
+/* ─── Gallery Section ────────────────────────────────────────────── */
+function GallerySection({isMobile,isTablet}){
+  const px=isMobile?"20px":isTablet?"32px":"48px";
+  const rooms=[
+    {label:"Living Room",style:"Scandinavian",tag:"AI Visualized",palette:["#8B9E8B","#D4C8B4"],size:"large",badge:"Before → After"},
+    {label:"Master Bedroom",style:"Modern Luxury",tag:"Staged",palette:["#4A4440","#8B7355"],size:"tall"},
+    {label:"Home Office",style:"Minimalist",tag:"AI Visualized",palette:["#B8C8D4","#E8EEF2"],size:"normal"},
+    {label:"Open Kitchen",style:"Mediterranean",tag:"Featured",palette:["#C47355","#F0E0D0"],size:"wide",badge:"Guest Favorite"},
+    {label:"Reading Nook",style:"Japandi",tag:"AI Visualized",palette:["#2D4A3E","#8B9E8B"],size:"normal"},
+    {label:"Dining Room",style:"Art Deco",tag:"Staged",palette:["#9D8FA8","#D4C8B4"],size:"tall"},
+    {label:"Loft Studio",style:"Industrial",tag:"Featured",palette:["#4A4440","#C9B99A"],size:"normal"},
+    {label:"Sunroom",style:"Boho",tag:"AI Visualized",palette:["#C9A87C","#F0E0D0"],size:"wide"},
+  ];
   return(
-    <footer style={{background:C.text,padding:isMobile?"32px 20px":"40px 48px"}}>
-      <div style={{maxWidth:1140,margin:"0 auto",display:"flex",alignItems:isMobile?"flex-start":"center",justifyContent:"space-between",flexDirection:isMobile?"column":"row",gap:isMobile?16:0}}>
-        <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <div style={{width:26,height:26,borderRadius:"50%",background:C.accent,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{color:"white",fontSize:11,fontWeight:700}}>M</span></div>
-          <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:16,letterSpacing:"-0.3px",color:"white"}}>md escapes</span>
+    <section style={{padding:`${isMobile?52:88}px ${px}`,background:C.bg}}>
+      <div style={{maxWidth:1140,margin:"0 auto"}}>
+        <div style={{display:"flex",alignItems:isMobile?"flex-start":"flex-end",justifyContent:"space-between",marginBottom:isMobile?32:48,flexDirection:isMobile?"column":"row",gap:isMobile?16:0}}>
+          <div>
+            <p style={{color:C.accent,fontSize:11,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",marginBottom:14}}>— Design Gallery</p>
+            <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?30:42,fontWeight:400,lineHeight:1.15}}>Every room,<br/><em style={{fontStyle:"italic",color:C.accent}}>a story.</em></h2>
+          </div>
+          <p style={{fontSize:isMobile?14:16,color:C.muted,maxWidth:320,lineHeight:1.7}}>Real spaces transformed by our AI visualizer and staging tools. Uploaded by guests and hosts.</p>
         </div>
-        {!isMobile&&<p style={{color:"rgba(255,255,255,.3)",fontSize:13}}>© 2026 DTE SOLUTIONS MD Escapes. Private stays, designed slowly.</p>}
-        <div style={{display:"flex",gap:20}}>{["Privacy","Terms","Contact"].map(l=><a key={l} href="#" style={{color:"rgba(255,255,255,.4)",fontSize:13,textDecoration:"none"}}>{l}</a>)}</div>
-        {isMobile&&<p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 DTE SOLUTIONS MD Escapes</p>}
+        <div style={{
+          display:"grid",
+          gridTemplateColumns:isMobile?"1fr 1fr":isTablet?"1fr 1fr 1fr":"repeat(4,1fr)",
+          gridAutoRows:isMobile?140:180,
+          gap:isMobile?10:14,
+          gridAutoFlow:"dense",
+        }}>
+          {rooms.map((r,i)=>{
+            const isWide=r.size==="wide"&&!isMobile;
+            const isTall=r.size==="tall"&&!isMobile;
+            const isLarge=r.size==="large"&&!isMobile;
+            return(
+              <div key={i} className="mcard"
+                style={{
+                  gridColumn:isWide||isLarge?"span 2":"span 1",
+                  gridRow:isTall||isLarge?"span 2":"span 1",
+                  borderRadius:isMobile?14:18,overflow:"hidden",
+                  background:`linear-gradient(135deg,${r.palette[0]} 0%,${r.palette[1]} 100%)`,
+                  position:"relative",cursor:"pointer",
+                  transition:"transform .25s,box-shadow .25s",
+                }}>
+                {/* SVG room illustration overlay */}
+                <div style={{position:"absolute",inset:0,opacity:.18,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  <svg viewBox="0 0 200 150" style={{width:"80%",height:"80%"}}>
+                    <rect x="0" y="100" width="200" height="50" fill="#8B7355"/>
+                    <rect x="0" y="0" width="200" height="100" fill="#C9B99A"/>
+                    <rect x="130" y="10" width="55" height="70" fill="#D4E8D4" rx="2"/>
+                    <line x1="157" y1="10" x2="157" y2="80" stroke="#8B7355" strokeWidth="1.5"/>
+                    <line x1="130" y1="45" x2="185" y2="45" stroke="#8B7355" strokeWidth="1.5"/>
+                    <rect x="20" y="75" width="90" height="32" fill="#8B6F5E" rx="5"/>
+                    <rect x="20" y="68" width="90" height="14" fill="#7A5F4E" rx="3"/>
+                    <rect x="40" y="110" width="50" height="5" fill="#5C4A3A" rx="1"/>
+                    <ellipse cx="175" cy="88" rx="10" ry="14" fill="#5A7A5A"/>
+                  </svg>
+                </div>
+                {/* Gradient overlay */}
+                <div style={{position:"absolute",inset:0,background:"linear-gradient(160deg,transparent 30%,rgba(0,0,0,.55) 100%)"}}/>
+                {/* Top badges */}
+                <div style={{position:"absolute",top:12,left:12,display:"flex",gap:6}}>
+                  <span style={{background:"rgba(255,255,255,.9)",color:C.text,borderRadius:50,padding:"3px 10px",fontSize:10,fontWeight:600}}>{r.style}</span>
+                  {r.badge&&<span style={{background:C.accent,color:"white",borderRadius:50,padding:"3px 10px",fontSize:10,fontWeight:600}}>{r.badge}</span>}
+                </div>
+                {/* AI tag */}
+                <div style={{position:"absolute",top:12,right:12}}>
+                  <span style={{background:r.tag==="AI Visualized"?C.green:"rgba(0,0,0,.4)",color:"white",borderRadius:50,padding:"3px 10px",fontSize:10,fontWeight:600}}>
+                    {r.tag==="AI Visualized"?"✦ AI":r.tag}
+                  </span>
+                </div>
+                {/* Bottom label */}
+                <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"20px 14px 14px"}}>
+                  <p style={{color:"white",fontFamily:"'Playfair Display',serif",fontSize:isMobile?13:16,fontWeight:500,lineHeight:1.2}}>{r.label}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{textAlign:"center",marginTop:32}}>
+          <button className="mg" style={{background:"none",border:`1.5px solid ${C.border}`,borderRadius:50,padding:"12px 28px",fontSize:14,fontWeight:500,color:C.text,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>View full gallery →</button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Testimonials Section ───────────────────────────────────────── */
+function TestimonialsSection({isMobile,isTablet}){
+  const px=isMobile?"20px":isTablet?"32px":"48px";
+  const reviews=[
+    {initials:"SK",color:"#C4503A",name:"Sarah K.",role:"Interior Designer, Chicago",quote:"I sent clients a link to their room with the AI vision already generated. They approved the whole redesign in one meeting. Hasn't happened in 15 years of practice.",stars:5},
+    {initials:"MR",color:"#2B4438",name:"Marcus R.",role:"AirBnb Superhost, Nashville",quote:"Uploaded my guest room, hit AirBnb Ready, generated the vision. My bookings went up 40% after I used it to plan the actual renovation. The before/after slider sold my contractor on every choice.",stars:5},
+    {initials:"JL",color:"#9D8FA8",name:"Jordan L.",role:"First-time homeowner, Austin",quote:"I don't have a design eye at all. I took a picture of my living room, uploaded a sofa I found on Wayfair, and the AI told me exactly why it would or wouldn't work. Saved me from a $1,400 mistake.",stars:5},
+    {initials:"AP",color:"#C9A87C",name:"Alicia P.",role:"Property Manager, Miami",quote:"We stage five units a month. The Quick Transform presets cut our decision time in half. Minimal Reset before photos, then Cozy Sanctuary for the listing shots. Every time.",stars:5},
+  ];
+  return(
+    <section style={{background:C.green,padding:`${isMobile?52:88}px ${px}`}}>
+      <div style={{maxWidth:1140,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:isMobile?40:60}}>
+          <p style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",marginBottom:16}}>— What People Are Saying</p>
+          <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?30:46,fontWeight:400,color:"white",lineHeight:1.15}}>
+            Real spaces.<br/><em style={{fontStyle:"italic",color:"#E8C5A0"}}>Real transformation.</em>
+          </h2>
+          <p style={{color:"rgba(255,255,255,.55)",fontSize:isMobile?14:17,maxWidth:480,margin:"20px auto 0",lineHeight:1.75}}>
+            Don't guess. Don't outsource. See it designed for your exact room before a single thing moves.
+          </p>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":isTablet?"1fr 1fr":"repeat(4,1fr)",gap:isMobile?16:20}}>
+          {reviews.map((r,i)=>(
+            <div key={i} style={{background:"rgba(255,255,255,.07)",borderRadius:20,padding:"24px 22px",border:"1px solid rgba(255,255,255,.1)",backdropFilter:"blur(4px)"}}>
+              <div style={{display:"flex",gap:3,marginBottom:16}}>
+                {Array(r.stars).fill(0).map((_,s)=><span key={s} style={{color:"#E8C5A0",fontSize:13}}>★</span>)}
+              </div>
+              <p style={{fontFamily:"'Playfair Display',serif",fontSize:15,color:"rgba(255,255,255,.9)",lineHeight:1.75,marginBottom:20,fontStyle:"italic"}}>"{r.quote}"</p>
+              <div style={{display:"flex",alignItems:"center",gap:12,paddingTop:16,borderTop:"1px solid rgba(255,255,255,.1)"}}>
+                <div style={{width:40,height:40,borderRadius:"50%",background:r.color,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                  <span style={{color:"white",fontSize:13,fontWeight:700}}>{r.initials}</span>
+                </div>
+                <div>
+                  <p style={{color:"white",fontWeight:600,fontSize:13}}>{r.name}</p>
+                  <p style={{color:"rgba(255,255,255,.45)",fontSize:11,marginTop:2}}>{r.role}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer({isMobile,isTablet}){
+  const px=isMobile?"20px":isTablet?"32px":"48px";
+  const cols=[
+    {heading:"Product",links:["Stays","AI Visualizer","List Your Property","Quick Transforms","Saved Visions"]},
+    {heading:"Company",links:["About Us","Contact","FAQs","Pricing","Careers"]},
+    {heading:"Legal",links:["Terms & Conditions","Privacy Policy","Cookie Policy","Acceptable Use","Data Processing"]},
+  ];
+  return(
+    <footer style={{background:"#111009",padding:`${isMobile?48:64}px ${px} ${isMobile?32:40}px`}}>
+      <div style={{maxWidth:1140,margin:"0 auto"}}>
+        {/* Top row */}
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":isTablet?"1fr 1fr 1fr":"1.8fr 1fr 1fr 1fr",gap:isMobile?36:48,marginBottom:isMobile?40:56}}>
+          {/* Brand column */}
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:20}}>
+              <div style={{width:30,height:30,borderRadius:"50%",background:C.accent,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <span style={{color:"white",fontSize:13,fontWeight:700}}>M</span>
+              </div>
+              <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:20,letterSpacing:"-0.4px",color:"white"}}>md escapes</span>
+            </div>
+            <p style={{color:"rgba(255,255,255,.4)",fontSize:14,lineHeight:1.75,maxWidth:260,marginBottom:24}}>Private stays, designed slowly. Visualize any room before you book — or before you build.</p>
+            {/* Social icons */}
+            <div style={{display:"flex",gap:10}}>
+              {[
+                {label:"IG",path:"M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"},
+                {label:"TK",path:"M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.55V6.79a4.85 4.85 0 01-1.07-.1z"},
+                {label:"PI",path:"M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"},
+              ].map(s=>(
+                <a key={s.label} href="#" style={{width:36,height:36,borderRadius:"50%",background:"rgba(255,255,255,.08)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .2s",textDecoration:"none"}}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="rgba(255,255,255,.5)"><path d={s.path}/></svg>
+                </a>
+              ))}
+            </div>
+          </div>
+          {/* Link columns */}
+          {cols.map(col=>(
+            <div key={col.heading}>
+              <p style={{color:"white",fontWeight:600,fontSize:13,letterSpacing:".04em",marginBottom:18,textTransform:"uppercase"}}>{col.heading}</p>
+              <div style={{display:"flex",flexDirection:"column",gap:11}}>
+                {col.links.map(l=>(
+                  <a key={l} href="#" style={{color:"rgba(255,255,255,.4)",fontSize:13,textDecoration:"none",transition:"color .15s",lineHeight:1.4}}
+                    onMouseEnter={e=>e.target.style.color="rgba(255,255,255,.8)"}
+                    onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.4)"}>{l}</a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Bottom bar */}
+        <div style={{borderTop:"1px solid rgba(255,255,255,.08)",paddingTop:24,display:"flex",alignItems:"center",justifyContent:"space-between",flexDirection:isMobile?"column":"row",gap:isMobile?12:0}}>
+          <p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 MD Escapes LLC · Private stays, designed slowly.</p>
+          <div style={{display:"flex",gap:20}}>
+            {["Privacy Policy","Terms & Conditions","Cookie Policy"].map(l=>(
+              <a key={l} href="#" style={{color:"rgba(255,255,255,.25)",fontSize:12,textDecoration:"none"}}>{l}</a>
+            ))}
+          </div>
+        </div>
       </div>
     </footer>
   );

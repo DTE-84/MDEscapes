@@ -72,7 +72,6 @@ export default function MDEscapesApp() {
   const width=useWidth(); const isMobile=width<768; const isTablet=width<1024;
   const [activePropType,setActivePropType]=useState("All");
   const [activeSection,setActiveSection]=useState("stays");
-  const [activeModal,setActiveModal]=useState(null); // 'privacy', 'terms', 'contact'
   const visRef=useRef(null);
   const scrollToVis=()=>{setActiveSection("visualizer");setTimeout(()=>visRef.current?.scrollIntoView({behavior:"smooth",block:"start"}),50);};
   return (
@@ -81,7 +80,6 @@ export default function MDEscapesApp() {
         *{box-sizing:border-box;margin:0;padding:0;}
         @keyframes spin{to{transform:rotate(360deg);}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
         .ma:hover{background:#B03D2C!important;}
         .mg:hover{background:rgba(28,23,18,.06)!important;}
@@ -96,9 +94,10 @@ export default function MDEscapesApp() {
       <HeroSection activePropType={activePropType} setActivePropType={setActivePropType} scrollToVis={scrollToVis} isMobile={isMobile} isTablet={isTablet}/>
       <div ref={visRef}><VisualizerSection isMobile={isMobile} isTablet={isTablet}/></div>
       <HowItWorks isMobile={isMobile}/>
+      <GallerySection isMobile={isMobile} isTablet={isTablet}/>
+      <TestimonialsSection isMobile={isMobile} isTablet={isTablet}/>
       <FeaturedStays isMobile={isMobile} isTablet={isTablet}/>
-      <Footer isMobile={isMobile} setActiveModal={setActiveModal}/>
-      <Modal activeModal={activeModal} setActiveModal={setActiveModal} isMobile={isMobile}/>
+      <Footer isMobile={isMobile} isTablet={isTablet}/>
     </div>
   );
 }
@@ -283,16 +282,13 @@ function VisualizerSection({isMobile,isTablet}){
           id:Date.now()+Math.random(),
           name:file.name.replace(/\.[^/.]+$/,""),
           src:e.target.result,
-          x:50,y:50,scale:0.28,blend:"multiply",
-          url: "",
-          price: ""
+          x:50,y:50,scale:0.28,blend:"multiply"
         }]);
       };
       reader.readAsDataURL(file);
     });
   };
   const removeProduct=(id)=>setProductImages(prev=>prev.filter(p=>p.id!==id));
-  const updateProduct=(id,updates)=>setProductImages(prev=>prev.map(p=>p.id===id?{...p,...updates}:p));
   const toggleBlend=(id)=>setProductImages(prev=>prev.map(p=>p.id===id?{...p,blend:p.blend==="multiply"?"normal":"multiply"}:p));
   const startResizeDrag=(e,prod)=>{
     e.stopPropagation();
@@ -383,7 +379,7 @@ function VisualizerSection({isMobile,isTablet}){
                   <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:19,fontWeight:600}}>Design Studio</h3>
                   {activeCount>0&&<span style={{fontSize:11,color:C.muted,background:C.border,borderRadius:50,padding:"3px 10px"}}>{activeCount} active</span>}
                 </div>
-                <ControlTabs activeTab={activeTab} setActiveTab={setActiveTab} selectedColor={selectedColor} setSelectedColor={setSelectedColor} useCustom={useCustom} setUseCustom={setUseCustom} customHex={customHex} setCustomHex={setCustomHex} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} selectedFurniture={selectedFurniture} toggleFurniture={toggleFurniture} placedItems={placedItems} addToCanvas={addToCanvas} savedVisions={savedVisions} setSavedVisions={setSavedVisions} viewingSaved={viewingSaved} setViewingSaved={setViewingSaved} applyQuickTransform={applyQuickTransform} productImages={productImages} updateProduct={updateProduct} isMobile={false}/>
+                <ControlTabs activeTab={activeTab} setActiveTab={setActiveTab} selectedColor={selectedColor} setSelectedColor={setSelectedColor} useCustom={useCustom} setUseCustom={setUseCustom} customHex={customHex} setCustomHex={setCustomHex} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} selectedFurniture={selectedFurniture} toggleFurniture={toggleFurniture} placedItems={placedItems} addToCanvas={addToCanvas} savedVisions={savedVisions} setSavedVisions={setSavedVisions} viewingSaved={viewingSaved} setViewingSaved={setViewingSaved} applyQuickTransform={applyQuickTransform} isMobile={false}/>
                 {activeCount>0&&(
                   <div style={{margin:"16px 0",padding:"12px 14px",background:"white",borderRadius:12,border:`1px solid ${C.border}`}}>
                     <p style={{fontSize:11,fontWeight:600,color:C.muted,textTransform:"uppercase",letterSpacing:".1em",marginBottom:8}}>Current Selection</p>
@@ -406,7 +402,7 @@ function VisualizerSection({isMobile,isTablet}){
                       <span style={{color:C.muted,fontSize:18,display:"inline-block",transform:controlsOpen?"rotate(180deg)":"none",transition:"transform .2s"}}>⌄</span>
                     </div>
                   </button>
-                  {controlsOpen&&<div style={{padding:"0 18px 18px",background:C.card}}><ControlTabs activeTab={activeTab} setActiveTab={setActiveTab} selectedColor={selectedColor} setSelectedColor={setSelectedColor} useCustom={useCustom} setUseCustom={setUseCustom} customHex={customHex} setCustomHex={setCustomHex} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} selectedFurniture={selectedFurniture} toggleFurniture={toggleFurniture} placedItems={placedItems} addToCanvas={addToCanvas} savedVisions={savedVisions} setSavedVisions={setSavedVisions} viewingSaved={viewingSaved} setViewingSaved={setViewingSaved} applyQuickTransform={applyQuickTransform} productImages={productImages} updateProduct={updateProduct} isMobile={true}/></div>}
+                  {controlsOpen&&<div style={{padding:"0 18px 18px",background:C.card}}><ControlTabs activeTab={activeTab} setActiveTab={setActiveTab} selectedColor={selectedColor} setSelectedColor={setSelectedColor} useCustom={useCustom} setUseCustom={setUseCustom} customHex={customHex} setCustomHex={setCustomHex} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} selectedFurniture={selectedFurniture} toggleFurniture={toggleFurniture} placedItems={placedItems} addToCanvas={addToCanvas} savedVisions={savedVisions} setSavedVisions={setSavedVisions} viewingSaved={viewingSaved} setViewingSaved={setViewingSaved} applyQuickTransform={applyQuickTransform} isMobile={true}/></div>}
                 </div>
               )}
 
@@ -438,7 +434,7 @@ function VisualizerSection({isMobile,isTablet}){
                   <div key={prod.id}
                     onMouseDown={e=>startProductDrag(e,prod)}
                     onTouchStart={e=>{e.stopPropagation();const t=e.touches[0];const rect=imgContainerRef.current?.getBoundingClientRect();furnDrag.current={id:"product_"+prod.id,ox:t.clientX-rect.left-(prod.x/100*rect.width),oy:t.clientY-rect.top-(prod.y/100*rect.height),isProduct:true};}}
-                    style={{position:"absolute",left:`${prod.x}%`,top:`${prod.y}%`,transform:`translate(-50%,-50%) scale(${prod.scale}) skewX(${prod.skew||0}deg)`,zIndex:12,cursor:"grab",userSelect:"none",transformOrigin:"center center"}}>
+                    style={{position:"absolute",left:`${prod.x}%`,top:`${prod.y}%`,transform:`translate(-50%,-50%) scale(${prod.scale})`,zIndex:12,cursor:"grab",userSelect:"none",transformOrigin:"center center"}}>
                     <div style={{position:"relative",display:"inline-block"}}>
                       <img src={prod.src} alt={prod.name}
                         style={{maxWidth:240,maxHeight:240,display:"block",mixBlendMode:prod.blend,filter:"drop-shadow(0 4px 10px rgba(0,0,0,0.25))",borderRadius:4}}
@@ -446,19 +442,8 @@ function VisualizerSection({isMobile,isTablet}){
                       />
                       {/* × remove */}
                       <button onClick={e=>{e.stopPropagation();removeProduct(prod.id);}} style={{position:"absolute",top:-10,left:-10,width:20,height:20,borderRadius:"50%",background:C.accent,border:"none",color:"white",fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:14,lineHeight:1}}>×</button>
-                      
-                      {/* price tag */}
-                      {prod.price && (
-                        <div style={{position:"absolute",top:10,right:10,background:C.green,color:"white",padding:"3px 8px",borderRadius:4,fontSize:10,fontWeight:700,boxShadow:"0 2px 6px rgba(0,0,0,0.2)",zIndex:15}}>{prod.price}</div>
-                      )}
-
-                      {/* shop link */}
-                      {prod.url && (
-                        <a href={prod.url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()} style={{position:"absolute",bottom:10,right:10,background:"white",color:C.text,padding:"4px 10px",borderRadius:20,fontSize:9,fontWeight:700,textDecoration:"none",boxShadow:"0 2px 6px rgba(0,0,0,0.2)",zIndex:15,display:"flex",alignItems:"center",gap:4}}>
-                          SHOP <span style={{fontSize:8}}>↗</span>
-                        </a>
-                      )}
-
+                      {/* blend toggle */}
+                      <button onClick={e=>{e.stopPropagation();toggleBlend(prod.id);}} title={prod.blend==="multiply"?"White bg removed (multiply)":"Normal blend"} style={{position:"absolute",top:-10,right:-10,width:20,height:20,borderRadius:"50%",background:prod.blend==="multiply"?C.green:"rgba(0,0,0,.5)",border:"none",color:"white",fontSize:9,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:14,lineHeight:1,fontWeight:700}}>BG</button>
                       {/* resize handle */}
                       <div onMouseDown={e=>{e.stopPropagation();productResizeDrag.current={id:prod.id,startX:e.clientX,startScale:prod.scale};}} onTouchStart={e=>{e.stopPropagation();productResizeDrag.current={id:prod.id,startX:e.touches[0].clientX,startScale:prod.scale};}}
                         style={{position:"absolute",bottom:-8,right:-8,width:16,height:16,background:"white",border:`2px solid ${C.accent}`,borderRadius:3,cursor:"se-resize",zIndex:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.accent}}>⤡</div>
@@ -544,7 +529,7 @@ function RoomIntelligence({analysis,isAnalyzing,open,setOpen,isMobile}){
   );
 }
 
-function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useCustom,setUseCustom,customHex,setCustomHex,selectedStyle,setSelectedStyle,selectedFurniture,toggleFurniture,placedItems,addToCanvas,savedVisions,setSavedVisions,viewingSaved,setViewingSaved,applyQuickTransform,productImages,updateProduct,isMobile}){
+function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useCustom,setUseCustom,customHex,setCustomHex,selectedStyle,setSelectedStyle,selectedFurniture,toggleFurniture,placedItems,addToCanvas,savedVisions,setSavedVisions,viewingSaved,setViewingSaved,applyQuickTransform,isMobile}){
   return(
     <>
       <div style={{display:"flex",borderBottom:`1px solid ${C.border}`,marginBottom:16,overflowX:"auto"}}>
@@ -602,7 +587,7 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
               <div>
                 <p style={{fontSize:13,fontWeight:600,color:C.text}}>📸 My Products</p>
-                <p style={{fontSize:11,color:C.muted,marginTop:2}}>Upload images · Map to real store items</p>
+                <p style={{fontSize:11,color:C.muted,marginTop:2}}>Upload saved images from IKEA, Wayfair, Amazon, etc.</p>
               </div>
               <label style={{background:C.accent,color:"white",borderRadius:50,padding:"6px 14px",fontSize:12,fontWeight:600,cursor:"pointer",flexShrink:0,fontFamily:"'DM Sans',sans-serif"}}>
                 + Add
@@ -610,39 +595,21 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
               </label>
             </div>
             {productImages.length>0?(
-              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
                 {productImages.map(prod=>(
-                  <div key={prod.id} style={{padding:"12px",background:C.card,borderRadius:12,border:`1px solid ${C.border}`}}>
-                    <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-                      <img src={prod.src} alt={prod.name} style={{width:44,height:44,objectFit:"contain",borderRadius:8,background:"white",border:`1px solid ${C.border}`,flexShrink:0}}/>
-                      <div style={{flex:1,minWidth:0}}>
-                        <input value={prod.name} onChange={e=>updateProduct(prod.id,{name:e.target.value})} style={{fontSize:13,fontWeight:600,color:C.text,width:"100%",background:"none",border:"none",borderBottom:"1px solid transparent",padding:"2px 0",outline:"none"}} placeholder="Product Name"/>
-                        <p style={{fontSize:10,color:C.muted}}>Drag to move · ⤡ to resize · BG for transparency</p>
-                      </div>
-                      <div style={{display:"flex",gap:5}}>
-                        <button onClick={()=>toggleBlend(prod.id)} title="Toggle white background removal" style={{background:prod.blend==="multiply"?C.green:C.border,color:"white",border:"none",borderRadius:50,padding:"4px 10px",fontSize:10,fontWeight:700,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>BG {prod.blend==="multiply"?"ON":"OFF"}</button>
-                        <button onClick={()=>removeProduct(prod.id)} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:50,width:26,height:26,fontSize:14,color:C.muted,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
-                      </div>
+                  <div key={prod.id} style={{display:"flex",alignItems:"center",gap:10,padding:"6px 10px",background:C.card,borderRadius:10,border:`1px solid ${C.border}`}}>
+                    <img src={prod.src} alt={prod.name} style={{width:36,height:36,objectFit:"contain",borderRadius:6,background:"white",border:`1px solid ${C.border}`,flexShrink:0}}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <p style={{fontSize:12,fontWeight:500,color:C.text,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{prod.name}</p>
+                      <p style={{fontSize:10,color:C.muted}}>On canvas · drag to position · ⤡ to resize</p>
                     </div>
-                    
-                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
-                      <div style={{position:"relative"}}>
-                        <span style={{position:"absolute",left:8,top:6,fontSize:10,color:C.muted}}>URL</span>
-                        <input value={prod.url} onChange={e=>updateProduct(prod.id,{url:e.target.value})} style={{width:"100%",padding:"18px 8px 6px",fontSize:11,borderRadius:8,border:`1px solid ${C.border}`,background:"white",outline:"none"}} placeholder="Store link..."/>
-                      </div>
-                      <div style={{position:"relative"}}>
-                        <span style={{position:"absolute",left:8,top:6,fontSize:10,color:C.muted}}>PRICE</span>
-                        <input value={prod.price} onChange={e=>updateProduct(prod.id,{price:e.target.value})} style={{width:"100%",padding:"18px 8px 6px",fontSize:11,borderRadius:8,border:`1px solid ${C.border}`,background:"white",outline:"none"}} placeholder="$0.00"/>
-                      </div>
-                    </div>
-
-                    <div style={{display:"flex",alignItems:"center",gap:10}}>
-                      <span style={{fontSize:10,color:C.muted,fontWeight:600,textTransform:"uppercase",width:40}}>Perspective</span>
-                      <input type="range" min="-30" max="30" value={prod.skew||0} onChange={e=>updateProduct(prod.id,{skew:parseInt(e.target.value)})} style={{flex:1,height:4,accentColor:C.accent}}/>
-                      <span style={{fontSize:10,color:C.muted,fontFamily:"monospace",width:24}}>{prod.skew||0}°</span>
+                    <div style={{display:"flex",gap:5,flexShrink:0}}>
+                      <button onClick={()=>toggleBlend(prod.id)} title="Toggle white background removal" style={{background:prod.blend==="multiply"?C.green:C.border,color:"white",border:"none",borderRadius:50,padding:"3px 8px",fontSize:9,fontWeight:700,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>BG {prod.blend==="multiply"?"ON":"OFF"}</button>
+                      <button onClick={()=>removeProduct(prod.id)} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:50,width:22,height:22,fontSize:13,color:C.muted,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>×</button>
                     </div>
                   </div>
                 ))}
+                <p style={{fontSize:10,color:C.muted,textAlign:"center",marginTop:2}}>BG ON removes white backgrounds (best for store photos)</p>
               </div>
             ):(
               <p style={{fontSize:12,color:C.muted,textAlign:"center",paddingTop:4}}>No products added yet</p>
@@ -809,70 +776,197 @@ function FeaturedStays({isMobile,isTablet}){
   );
 }
 
-function Footer({isMobile, setActiveModal}){
+
+/* ─── Gallery Section ────────────────────────────────────────────── */
+function GallerySection({isMobile,isTablet}){
+  const px=isMobile?"20px":isTablet?"32px":"48px";
+  const rooms=[
+    {label:"Living Room",style:"Scandinavian",tag:"AI Visualized",palette:["#8B9E8B","#D4C8B4"],size:"large",badge:"Before → After"},
+    {label:"Master Bedroom",style:"Modern Luxury",tag:"Staged",palette:["#4A4440","#8B7355"],size:"tall"},
+    {label:"Home Office",style:"Minimalist",tag:"AI Visualized",palette:["#B8C8D4","#E8EEF2"],size:"normal"},
+    {label:"Open Kitchen",style:"Mediterranean",tag:"Featured",palette:["#C47355","#F0E0D0"],size:"wide",badge:"Guest Favorite"},
+    {label:"Reading Nook",style:"Japandi",tag:"AI Visualized",palette:["#2D4A3E","#8B9E8B"],size:"normal"},
+    {label:"Dining Room",style:"Art Deco",tag:"Staged",palette:["#9D8FA8","#D4C8B4"],size:"tall"},
+    {label:"Loft Studio",style:"Industrial",tag:"Featured",palette:["#4A4440","#C9B99A"],size:"normal"},
+    {label:"Sunroom",style:"Boho",tag:"AI Visualized",palette:["#C9A87C","#F0E0D0"],size:"wide"},
+  ];
   return(
-    <footer style={{background:C.text,padding:isMobile?"32px 20px":"40px 48px"}}>
-      <div style={{maxWidth:1140,margin:"0 auto",display:"flex",alignItems:isMobile?"flex-start":"center",justifyContent:"space-between",flexDirection:isMobile?"column":"row",gap:isMobile?16:0}}>
-        <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <div style={{width:26,height:26,borderRadius:"50%",background:C.accent,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{color:"white",fontSize:11,fontWeight:700}}>M</span></div>
-          <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:16,letterSpacing:"-0.3px",color:"white"}}>md escapes</span>
+    <section style={{padding:`${isMobile?52:88}px ${px}`,background:C.bg}}>
+      <div style={{maxWidth:1140,margin:"0 auto"}}>
+        <div style={{display:"flex",alignItems:isMobile?"flex-start":"flex-end",justifyContent:"space-between",marginBottom:isMobile?32:48,flexDirection:isMobile?"column":"row",gap:isMobile?16:0}}>
+          <div>
+            <p style={{color:C.accent,fontSize:11,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",marginBottom:14}}>— Design Gallery</p>
+            <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?30:42,fontWeight:400,lineHeight:1.15}}>Every room,<br/><em style={{fontStyle:"italic",color:C.accent}}>a story.</em></h2>
+          </div>
+          <p style={{fontSize:isMobile?14:16,color:C.muted,maxWidth:320,lineHeight:1.7}}>Real spaces transformed by our AI visualizer and staging tools. Uploaded by guests and hosts.</p>
         </div>
-        {!isMobile&&<p style={{color:"rgba(255,255,255,.3)",fontSize:13}}>© 2026 MD Escapes. Private stays, designed slowly.</p>}
-        <div style={{display:"flex",gap:20}}>
-          {["Privacy","Terms","Contact"].map(l=>(
-            <button key={l} onClick={()=>setActiveModal(l.toLowerCase())} style={{background:"none",border:"none",color:"rgba(255,255,255,.4)",fontSize:13,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>{l}</button>
-          ))}
+        <div style={{
+          display:"grid",
+          gridTemplateColumns:isMobile?"1fr 1fr":isTablet?"1fr 1fr 1fr":"repeat(4,1fr)",
+          gridAutoRows:isMobile?140:180,
+          gap:isMobile?10:14,
+          gridAutoFlow:"dense",
+        }}>
+          {rooms.map((r,i)=>{
+            const isWide=r.size==="wide"&&!isMobile;
+            const isTall=r.size==="tall"&&!isMobile;
+            const isLarge=r.size==="large"&&!isMobile;
+            return(
+              <div key={i} className="mcard"
+                style={{
+                  gridColumn:isWide||isLarge?"span 2":"span 1",
+                  gridRow:isTall||isLarge?"span 2":"span 1",
+                  borderRadius:isMobile?14:18,overflow:"hidden",
+                  background:`linear-gradient(135deg,${r.palette[0]} 0%,${r.palette[1]} 100%)`,
+                  position:"relative",cursor:"pointer",
+                  transition:"transform .25s,box-shadow .25s",
+                }}>
+                {/* SVG room illustration overlay */}
+                <div style={{position:"absolute",inset:0,opacity:.18,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  <svg viewBox="0 0 200 150" style={{width:"80%",height:"80%"}}>
+                    <rect x="0" y="100" width="200" height="50" fill="#8B7355"/>
+                    <rect x="0" y="0" width="200" height="100" fill="#C9B99A"/>
+                    <rect x="130" y="10" width="55" height="70" fill="#D4E8D4" rx="2"/>
+                    <line x1="157" y1="10" x2="157" y2="80" stroke="#8B7355" strokeWidth="1.5"/>
+                    <line x1="130" y1="45" x2="185" y2="45" stroke="#8B7355" strokeWidth="1.5"/>
+                    <rect x="20" y="75" width="90" height="32" fill="#8B6F5E" rx="5"/>
+                    <rect x="20" y="68" width="90" height="14" fill="#7A5F4E" rx="3"/>
+                    <rect x="40" y="110" width="50" height="5" fill="#5C4A3A" rx="1"/>
+                    <ellipse cx="175" cy="88" rx="10" ry="14" fill="#5A7A5A"/>
+                  </svg>
+                </div>
+                {/* Gradient overlay */}
+                <div style={{position:"absolute",inset:0,background:"linear-gradient(160deg,transparent 30%,rgba(0,0,0,.55) 100%)"}}/>
+                {/* Top badges */}
+                <div style={{position:"absolute",top:12,left:12,display:"flex",gap:6}}>
+                  <span style={{background:"rgba(255,255,255,.9)",color:C.text,borderRadius:50,padding:"3px 10px",fontSize:10,fontWeight:600}}>{r.style}</span>
+                  {r.badge&&<span style={{background:C.accent,color:"white",borderRadius:50,padding:"3px 10px",fontSize:10,fontWeight:600}}>{r.badge}</span>}
+                </div>
+                {/* AI tag */}
+                <div style={{position:"absolute",top:12,right:12}}>
+                  <span style={{background:r.tag==="AI Visualized"?C.green:"rgba(0,0,0,.4)",color:"white",borderRadius:50,padding:"3px 10px",fontSize:10,fontWeight:600}}>
+                    {r.tag==="AI Visualized"?"✦ AI":r.tag}
+                  </span>
+                </div>
+                {/* Bottom label */}
+                <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"20px 14px 14px"}}>
+                  <p style={{color:"white",fontFamily:"'Playfair Display',serif",fontSize:isMobile?13:16,fontWeight:500,lineHeight:1.2}}>{r.label}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
-        {isMobile&&<p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 MD Escapes</p>}
+        <div style={{textAlign:"center",marginTop:32}}>
+          <button className="mg" style={{background:"none",border:`1.5px solid ${C.border}`,borderRadius:50,padding:"12px 28px",fontSize:14,fontWeight:500,color:C.text,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>View full gallery →</button>
+        </div>
       </div>
-    </footer>
+    </section>
   );
 }
 
-function Modal({activeModal, setActiveModal, isMobile}) {
-  if (!activeModal) return null;
-
-  const content = {
-    privacy: {
-      title: "Privacy Policy",
-      body: `We value your privacy. MD Escapes collects minimal data required to provide our design visualization services. We do not sell your personal information. Your uploaded room photos are processed securely and are only used for your specific design vision.`
-    },
-    terms: {
-      title: "Terms of Service",
-      body: `By using MD Escapes, you agree to our terms. This visualizer is for conceptual design purposes. Final architectural decisions should be verified by a licensed professional. All design visions generated by our AI are the intellectual property of MD Escapes.`
-    },
-    contact: {
-      title: "Contact Mickey",
-      body: `Ready to transform your space? Mickey is available for custom interior design consultations and premium property staging. Reach out to start your design journey.`,
-      details: [
-        { label: "Email", value: "hello@mdescapes.com" },
-        { label: "Phone", value: "+1 (555) 000-0000" },
-        { label: "Instagram", value: "@mdescapes" }
-      ]
-    }
-  }[activeModal];
-
-  return (
-    <div style={{position:"fixed",inset:0,background:"rgba(28,23,18,0.85)",backdropFilter:"blur(12px)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000,animation:"fadeIn 0.3s ease both",padding:20}} onClick={()=>setActiveModal(null)}>
-      <div style={{background:C.bg,width:"100%",maxWidth:600,borderRadius:24,padding:isMobile?24:48,position:"relative",animation:"fadeUp 0.4s ease both",boxShadow:"0 20px 80px rgba(0,0,0,0.4)",border:`1px solid ${C.border}`}} onClick={e=>e.stopPropagation()}>
-        <button onClick={()=>setActiveModal(null)} style={{position:"absolute",top:24,right:24,background:C.border,border:"none",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:18,color:C.text,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
-        <p style={{color:C.accent,fontSize:11,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",marginBottom:14}}>— {activeModal === 'contact' ? "Get in Touch" : "Legal Document"}</p>
-        <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?28:36,marginBottom:20,fontWeight:400}}>{content.title}</h2>
-        <p style={{fontSize:16,color:C.muted,lineHeight:1.8,marginBottom:24}}>{content.body}</p>
-        
-        {content.details && (
-          <div style={{display:"grid",gap:12,marginTop:32}}>
-            {content.details.map(d=>(
-              <div key={d.label} style={{display:"flex",justifyContent:"space-between",padding:"16px 20px",background:C.white,borderRadius:16,border:`1px solid ${C.border}`}}>
-                <span style={{fontSize:12,fontWeight:600,color:C.accent,textTransform:"uppercase",letterSpacing:".05em"}}>{d.label}</span>
-                <span style={{fontSize:14,fontWeight:500,color:C.text}}>{d.value}</span>
+/* ─── Testimonials Section ───────────────────────────────────────── */
+function TestimonialsSection({isMobile,isTablet}){
+  const px=isMobile?"20px":isTablet?"32px":"48px";
+  const reviews=[
+    {initials:"SK",color:"#C4503A",name:"Sarah K.",role:"Interior Designer, Chicago",quote:"I sent clients a link to their room with the AI vision already generated. They approved the whole redesign in one meeting. Hasn't happened in 15 years of practice.",stars:5},
+    {initials:"MR",color:"#2B4438",name:"Marcus R.",role:"AirBnb Superhost, Nashville",quote:"Uploaded my guest room, hit AirBnb Ready, generated the vision. My bookings went up 40% after I used it to plan the actual renovation. The before/after slider sold my contractor on every choice.",stars:5},
+    {initials:"JL",color:"#9D8FA8",name:"Jordan L.",role:"First-time homeowner, Austin",quote:"I don't have a design eye at all. I took a picture of my living room, uploaded a sofa I found on Wayfair, and the AI told me exactly why it would or wouldn't work. Saved me from a $1,400 mistake.",stars:5},
+    {initials:"AP",color:"#C9A87C",name:"Alicia P.",role:"Property Manager, Miami",quote:"We stage five units a month. The Quick Transform presets cut our decision time in half. Minimal Reset before photos, then Cozy Sanctuary for the listing shots. Every time.",stars:5},
+  ];
+  return(
+    <section style={{background:C.green,padding:`${isMobile?52:88}px ${px}`}}>
+      <div style={{maxWidth:1140,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:isMobile?40:60}}>
+          <p style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",marginBottom:16}}>— What People Are Saying</p>
+          <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?30:46,fontWeight:400,color:"white",lineHeight:1.15}}>
+            Real spaces.<br/><em style={{fontStyle:"italic",color:"#E8C5A0"}}>Real transformation.</em>
+          </h2>
+          <p style={{color:"rgba(255,255,255,.55)",fontSize:isMobile?14:17,maxWidth:480,margin:"20px auto 0",lineHeight:1.75}}>
+            Don't guess. Don't outsource. See it designed for your exact room before a single thing moves.
+          </p>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":isTablet?"1fr 1fr":"repeat(4,1fr)",gap:isMobile?16:20}}>
+          {reviews.map((r,i)=>(
+            <div key={i} style={{background:"rgba(255,255,255,.07)",borderRadius:20,padding:"24px 22px",border:"1px solid rgba(255,255,255,.1)",backdropFilter:"blur(4px)"}}>
+              <div style={{display:"flex",gap:3,marginBottom:16}}>
+                {Array(r.stars).fill(0).map((_,s)=><span key={s} style={{color:"#E8C5A0",fontSize:13}}>★</span>)}
               </div>
+              <p style={{fontFamily:"'Playfair Display',serif",fontSize:15,color:"rgba(255,255,255,.9)",lineHeight:1.75,marginBottom:20,fontStyle:"italic"}}>"{r.quote}"</p>
+              <div style={{display:"flex",alignItems:"center",gap:12,paddingTop:16,borderTop:"1px solid rgba(255,255,255,.1)"}}>
+                <div style={{width:40,height:40,borderRadius:"50%",background:r.color,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                  <span style={{color:"white",fontSize:13,fontWeight:700}}>{r.initials}</span>
+                </div>
+                <div>
+                  <p style={{color:"white",fontWeight:600,fontSize:13}}>{r.name}</p>
+                  <p style={{color:"rgba(255,255,255,.45)",fontSize:11,marginTop:2}}>{r.role}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer({isMobile,isTablet}){
+  const px=isMobile?"20px":isTablet?"32px":"48px";
+  const cols=[
+    {heading:"Product",links:["Stays","AI Visualizer","List Your Property","Quick Transforms","Saved Visions"]},
+    {heading:"Company",links:["About Us","Contact","FAQs","Pricing","Careers"]},
+    {heading:"Legal",links:["Terms & Conditions","Privacy Policy","Cookie Policy","Acceptable Use","Data Processing"]},
+  ];
+  return(
+    <footer style={{background:"#111009",padding:`${isMobile?48:64}px ${px} ${isMobile?32:40}px`}}>
+      <div style={{maxWidth:1140,margin:"0 auto"}}>
+        {/* Top row */}
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":isTablet?"1fr 1fr 1fr":"1.8fr 1fr 1fr 1fr",gap:isMobile?36:48,marginBottom:isMobile?40:56}}>
+          {/* Brand column */}
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:20}}>
+              <div style={{width:30,height:30,borderRadius:"50%",background:C.accent,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                <span style={{color:"white",fontSize:13,fontWeight:700}}>M</span>
+              </div>
+              <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:20,letterSpacing:"-0.4px",color:"white"}}>md escapes</span>
+            </div>
+            <p style={{color:"rgba(255,255,255,.4)",fontSize:14,lineHeight:1.75,maxWidth:260,marginBottom:24}}>Private stays, designed slowly. Visualize any room before you book — or before you build.</p>
+            {/* Social icons */}
+            <div style={{display:"flex",gap:10}}>
+              {[
+                {label:"IG",path:"M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"},
+                {label:"TK",path:"M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.55V6.79a4.85 4.85 0 01-1.07-.1z"},
+                {label:"PI",path:"M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"},
+              ].map(s=>(
+                <a key={s.label} href="#" style={{width:36,height:36,borderRadius:"50%",background:"rgba(255,255,255,.08)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .2s",textDecoration:"none"}}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="rgba(255,255,255,.5)"><path d={s.path}/></svg>
+                </a>
+              ))}
+            </div>
+          </div>
+          {/* Link columns */}
+          {cols.map(col=>(
+            <div key={col.heading}>
+              <p style={{color:"white",fontWeight:600,fontSize:13,letterSpacing:".04em",marginBottom:18,textTransform:"uppercase"}}>{col.heading}</p>
+              <div style={{display:"flex",flexDirection:"column",gap:11}}>
+                {col.links.map(l=>(
+                  <a key={l} href="#" style={{color:"rgba(255,255,255,.4)",fontSize:13,textDecoration:"none",transition:"color .15s",lineHeight:1.4}}
+                    onMouseEnter={e=>e.target.style.color="rgba(255,255,255,.8)"}
+                    onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.4)"}>{l}</a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Bottom bar */}
+        <div style={{borderTop:"1px solid rgba(255,255,255,.08)",paddingTop:24,display:"flex",alignItems:"center",justifyContent:"space-between",flexDirection:isMobile?"column":"row",gap:isMobile?12:0}}>
+          <p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 MD Escapes LLC · Private stays, designed slowly.</p>
+          <div style={{display:"flex",gap:20}}>
+            {["Privacy Policy","Terms & Conditions","Cookie Policy"].map(l=>(
+              <a key={l} href="#" style={{color:"rgba(255,255,255,.25)",fontSize:12,textDecoration:"none"}}>{l}</a>
             ))}
           </div>
-        )}
-
-        <button onClick={()=>setActiveModal(null)} className="ma" style={{width:"100%",marginTop:32,background:C.accent,color:"white",border:"none",borderRadius:50,padding:"14px",fontSize:15,fontWeight:600,cursor:"pointer",transition:"background .2s",fontFamily:"'DM Sans',sans-serif"}}>Close Window</button>
+        </div>
       </div>
-    </div>
+    </footer>
   );
 }
