@@ -72,14 +72,19 @@ export default function MDEscapesApp() {
   const width=useWidth(); const isMobile=width<768; const isTablet=width<1024;
   const [activePropType,setActivePropType]=useState("All");
   const [activeSection,setActiveSection]=useState("stays");
+  const [isContactOpen,setIsContactOpen]=useState(false);
   const visRef=useRef(null);
+  const faqRef=useRef(null);
   const scrollToVis=()=>{setActiveSection("visualizer");setTimeout(()=>visRef.current?.scrollIntoView({behavior:"smooth",block:"start"}),50);};
+  const scrollToFaq=()=>{setTimeout(()=>faqRef.current?.scrollIntoView({behavior:"smooth",block:"start"}),50);};
+  
   return (
     <div style={{fontFamily:"'Montserrat',sans-serif",background:C.bg,minHeight:"100vh",color:C.text}}>
       <style>{`
         *{box-sizing:border-box;margin:0;padding:0;}
         @keyframes spin{to{transform:rotate(360deg);}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
         .ma:hover{background:#C8894D!important;}
         .mg:hover{background:rgba(28,23,18,.06)!important;}
@@ -89,40 +94,44 @@ export default function MDEscapesApp() {
         .mup:hover{border-color:#E0A96D!important;background:rgba(224,169,109,.03)!important;}
         .mcard:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.1);}
         .mqt:hover{border-color:#E0A96D!important;transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08);}
+        .mclose:hover{background:rgba(0,0,0,.05)!important;}
       `}</style>
-      <Nav activeSection={activeSection} setActiveSection={setActiveSection} scrollToVis={scrollToVis} isMobile={isMobile}/>
-      <HeroSection activePropType={activePropType} setActivePropType={setActivePropType} scrollToVis={scrollToVis} isMobile={isMobile} isTablet={isTablet}/>
+      <Nav activeSection={activeSection} setActiveSection={setActiveSection} scrollToVis={scrollToVis} scrollToFaq={scrollToFaq} openContact={()=>setIsContactOpen(true)} isMobile={isMobile}/>
+      <HeroSection activePropType={activePropType} setActivePropType={setActivePropType} scrollToVis={scrollToVis} openContact={()=>setIsContactOpen(true)} isMobile={isMobile} isTablet={isTablet}/>
       <div ref={visRef}><VisualizerSection isMobile={isMobile} isTablet={isTablet}/></div>
       <HowItWorks isMobile={isMobile}/>
       <GallerySection isMobile={isMobile} isTablet={isTablet}/>
       <TestimonialsSection isMobile={isMobile} isTablet={isTablet}/>
       <FeaturedStays isMobile={isMobile} isTablet={isTablet}/>
-      <Footer isMobile={isMobile} isTablet={isTablet}/>
+      <div ref={faqRef}><FAQSection openContact={()=>setIsContactOpen(true)} isMobile={isMobile}/></div>
+      <Footer openContact={()=>setIsContactOpen(true)} isMobile={isMobile} isTablet={isTablet}/>
+      <ContactModal isOpen={isContactOpen} onClose={()=>setIsContactOpen(false)} isMobile={isMobile}/>
     </div>
   );
 }
 
-function Nav({activeSection,setActiveSection,scrollToVis,isMobile}){
+function Nav({activeSection,setActiveSection,scrollToVis,scrollToFaq,openContact,isMobile}){
   return(
     <nav style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:isMobile?"14px 20px":"16px 48px",borderBottom:`1px solid ${C.border}`,background:C.bg,position:"sticky",top:0,zIndex:300}}>
-      <div style={{display:"flex",alignItems:"center",gap:8}}>
-        <div style={{width:28,height:28,borderRadius:"50%",background:C.green,display:"flex",alignItems:"center",justifyContent:"center"}}><span style={{color:"white",fontSize:12,fontWeight:700}}>M</span></div>
+      <div style={{display:"flex",alignItems:"center",gap:12}}>
+        <img src="/MDESCAPESLOGO.png" style={{width:isMobile?32:38,height:"auto",borderRadius:4}} alt="MDEscapes Logo" />
         <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:isMobile?16:19,letterSpacing:"-0.4px"}}>md escapes</span>
       </div>
       {!isMobile&&<div style={{display:"flex",gap:28,alignItems:"center"}}>
         <button className="mnl" onClick={()=>setActiveSection("stays")} style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:activeSection==="stays"?C.accent:C.text,transition:"color .2s",fontFamily:"'Montserrat',sans-serif"}}>Stays</button>
         <button className="mnl" onClick={scrollToVis} style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:activeSection==="visualizer"?C.accent:C.text,transition:"color .2s",display:"flex",alignItems:"center",gap:5,fontFamily:"'Montserrat',sans-serif"}}><span style={{fontSize:10}}>✦</span> AI Visualizer</button>
+        <button className="mnl" onClick={scrollToFaq} style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:C.text,transition:"color .2s",fontFamily:"'Montserrat',sans-serif"}}>FAQ</button>
       </div>}
       <div style={{display:"flex",gap:isMobile?8:14,alignItems:"center"}}>
-        {!isMobile&&<button className="mg" style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:C.text,padding:"8px 14px",borderRadius:50,transition:"background .15s",fontFamily:"'Montserrat',sans-serif"}}>Sign in</button>}
-        <button className="ma" style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:isMobile?"9px 16px":"10px 22px",fontSize:isMobile?13:15,fontWeight:600,cursor:"pointer",transition:"background .2s",fontFamily:"'Montserrat',sans-serif"}}>Get started</button>
+        {!isMobile&&<button onClick={openContact} className="mg" style={{background:"none",border:"none",cursor:"pointer",fontSize:15,fontWeight:500,color:C.text,padding:"8px 14px",borderRadius:50,transition:"background .15s",fontFamily:"'Montserrat',sans-serif"}}>Inquiry</button>}
+        <button onClick={openContact} className="ma" style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:isMobile?"9px 16px":"10px 22px",fontSize:isMobile?13:15,fontWeight:600,cursor:"pointer",transition:"background .2s",fontFamily:"'Montserrat',sans-serif"}}>Contact</button>
         {isMobile&&<button onClick={scrollToVis} style={{background:"none",border:`1px solid ${C.green}`,borderRadius:50,padding:"8px 14px",fontSize:12,fontWeight:500,color:C.green,cursor:"pointer",fontFamily:"'Montserrat',sans-serif",whiteSpace:"nowrap"}}>✦ Visualize</button>}
       </div>
     </nav>
   );
 }
 
-function HeroSection({activePropType,setActivePropType,scrollToVis,isMobile,isTablet}){
+function HeroSection({activePropType,setActivePropType,scrollToVis,openContact,isMobile,isTablet}){
   return(
     <section style={{padding:isMobile?"40px 20px 36px":isTablet?"56px 32px 44px":"72px 48px 56px",maxWidth:1140,margin:"0 auto"}}>
       <div style={{display:"grid",gridTemplateColumns:isMobile||isTablet?"1fr":"1fr 1fr",gap:isMobile?32:64,alignItems:"center"}}>
@@ -131,8 +140,8 @@ function HeroSection({activePropType,setActivePropType,scrollToVis,isMobile,isTa
           <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?36:isTablet?44:54,lineHeight:1.1,fontWeight:400}}>Stay somewhere <em style={{fontStyle:"italic",color:C.accent}}>designed</em> to be remembered.</h1>
           <p style={{fontSize:isMobile?15:16,color:C.muted,lineHeight:1.75,marginTop:20,maxWidth:440}}>A curated collection of private homes — and a built-in AI visualizer that lets you redesign any room in seconds.</p>
           <div style={{marginTop:28,display:"flex",gap:10}}>
-            <input placeholder="Where to? Try Kyoto, Lisbon, Big Sur…" style={{flex:1,minWidth:0,border:`1.5px solid ${C.border}`,borderRadius:50,padding:isMobile?"11px 16px":"13px 22px",fontSize:isMobile?14:15,background:C.white,outline:"none",color:C.text,fontFamily:"'Montserrat',sans-serif"}}/>
-            <button className="ma" style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:isMobile?"11px 18px":"13px 26px",fontSize:isMobile?14:15,fontWeight:600,cursor:"pointer",transition:"background .2s",whiteSpace:"nowrap",fontFamily:"'Montserrat',sans-serif"}}>Search</button>
+            <button onClick={openContact} className="ma" style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:isMobile?"13px 22px":"15px 32px",fontSize:isMobile?14:16,fontWeight:600,cursor:"pointer",transition:"background .2s",whiteSpace:"nowrap",fontFamily:"'Montserrat',sans-serif"}}>Request a Bid</button>
+            <button onClick={scrollToVis} style={{background:C.white,color:C.green,border:`1.5px solid ${C.border}`,borderRadius:50,padding:isMobile?"13px 22px":"15px 32px",fontSize:isMobile?14:16,fontWeight:600,cursor:"pointer",transition:"all .2s",whiteSpace:"nowrap",fontFamily:"'Montserrat',sans-serif"}}>AI Visualizer</button>
           </div>
           <div style={{marginTop:20,display:"flex",gap:7,flexWrap:"wrap"}}>
             {PROPERTY_TYPES.map((t,i)=>(
@@ -909,47 +918,64 @@ function TestimonialsSection({isMobile,isTablet}){
   );
 }
 
-function Footer({isMobile,isTablet}){
+function FAQSection({openContact,isMobile}){
+  const faqs=[
+    {q:"Is this available on mobile?",a:"Yes, MD Escapes is fully responsive and works beautifully on all mobile devices. While the native app is not installable yet, you can access the full visualizer and booking engine directly through your mobile browser."},
+    {q:"How do I request a bid or design consultation?",a:"We'd love to help you transform your space. You can request a bid or professional design consultation by clicking our [Contact Link] or emailing us directly. Our lead designers are based in Missouri and serve clients globally via the digital studio."},
+    {q:"What kind of photos work best for the visualizer?",a:"Wide-angle shots taken in natural daylight provide the highest fidelity results. Try to clear small clutter to let the AI focus on the bones of the room."},
+    {q:"Can I save my design visions?",a:"Yes, you can save up to 3 distinct design visions in your browser session to compare different styles and colors side-by-side."}
+  ];
+  return(
+    <section style={{padding:isMobile?"64px 20px":"88px 48px",background:C.bg,borderTop:`1px solid ${C.border}`}}>
+      <div style={{maxWidth:800,margin:"0 auto"}}>
+        <p style={{color:C.accent,fontSize:11,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",marginBottom:14,textAlign:"center"}}>— Questions & Answers</p>
+        <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?30:42,fontWeight:400,textAlign:"center",marginBottom:48}}>Frequently Asked.</h2>
+        <div style={{display:"flex",flexDirection:"column",gap:24}}>
+          {faqs.map((f,i)=>(
+            <div key={i} style={{background:C.white,borderRadius:16,padding:"24px 28px",border:`1px solid ${C.border}`,boxShadow:"0 2px 8px rgba(0,0,0,.02)"}}>
+              <p style={{fontWeight:600,fontSize:16,color:C.text,marginBottom:12}}>{f.q}</p>
+              <p style={{fontSize:15,color:C.muted,lineHeight:1.7}}>
+                {f.a.includes("[Contact Link]") ? (
+                  <>
+                    {f.a.split("[Contact Link]")[0]}
+                    <button onClick={openContact} style={{background:"none",border:"none",padding:0,color:C.accent,fontWeight:600,cursor:"pointer",textDecoration:"underline",fontFamily:"inherit",fontSize:"inherit"}}>Contact Modal</button>
+                    {f.a.split("[Contact Link]")[1]}
+                  </>
+                ) : f.a}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer({openContact,isMobile,isTablet}){
   const px=isMobile?"20px":isTablet?"32px":"48px";
   const cols=[
-    {heading:"Product",links:["Stays","AI Visualizer","List Your Property","Quick Transforms","Saved Visions"]},
-    {heading:"Company",links:["About Us","Contact","FAQs","Pricing","Careers"]},
-    {heading:"Legal",links:["Terms & Conditions","Privacy Policy","Cookie Policy","Acceptable Use","Data Processing"]},
+    {heading:"Product",links:["Stays","AI Visualizer","Quick Transforms","Saved Visions"]},
+    {heading:"Company",links:["About Us","FAQs","Pricing","Careers"]},
+    {heading:"Support",links:["Contact Us","Request a Bid","Design Services"]},
   ];
   return(
     <footer style={{background:"#0E1520",padding:`${isMobile?48:64}px ${px} ${isMobile?32:40}px`}}>
       <div style={{maxWidth:1140,margin:"0 auto"}}>
-        {/* Top row */}
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":isTablet?"1fr 1fr 1fr":"1.8fr 1fr 1fr 1fr",gap:isMobile?36:48,marginBottom:isMobile?40:56}}>
-          {/* Brand column */}
           <div>
-            <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:20}}>
-              <div style={{width:30,height:30,borderRadius:"50%",background:C.green,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <span style={{color:"white",fontSize:13,fontWeight:700}}>M</span>
-              </div>
+            <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
+              <img src="/MDESCAPESLOGO.png" style={{width:32,height:"auto",borderRadius:4,filter:"brightness(1.2)"}} alt="Logo" />
               <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:20,letterSpacing:"-0.4px",color:"white"}}>md escapes</span>
             </div>
             <p style={{color:"rgba(255,255,255,.4)",fontSize:14,lineHeight:1.75,maxWidth:260,marginBottom:24}}>Private stays, designed slowly. Visualize any room before you book — or before you build.</p>
-            {/* Social icons */}
-            <div style={{display:"flex",gap:10}}>
-              {[
-                {label:"IG",path:"M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"},
-                {label:"TK",path:"M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.55V6.79a4.85 4.85 0 01-1.07-.1z"},
-                {label:"PI",path:"M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"},
-              ].map(s=>(
-                <a key={s.label} href="#" style={{width:36,height:36,borderRadius:"50%",background:"rgba(255,255,255,.08)",display:"flex",alignItems:"center",justifyContent:"center",transition:"background .2s",textDecoration:"none"}}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="rgba(255,255,255,.5)"><path d={s.path}/></svg>
-                </a>
-              ))}
-            </div>
+            <button onClick={openContact} className="ma" style={{background:C.accent,color:C.green,border:"none",borderRadius:50,padding:"10px 22px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"'Montserrat',sans-serif"}}>Contact Support</button>
           </div>
-          {/* Link columns */}
           {cols.map(col=>(
             <div key={col.heading}>
               <p style={{color:"white",fontWeight:600,fontSize:13,letterSpacing:".04em",marginBottom:18,textTransform:"uppercase"}}>{col.heading}</p>
               <div style={{display:"flex",flexDirection:"column",gap:11}}>
                 {col.links.map(l=>(
-                  <a key={l} href="#" style={{color:"rgba(255,255,255,.4)",fontSize:13,textDecoration:"none",transition:"color .15s",lineHeight:1.4}}
+                  <a key={l} href="#" onClick={(e)=>{if(l.includes("Contact")||l.includes("Bid")) {e.preventDefault(); openContact();}}} style={{color:"rgba(255,255,255,.4)",fontSize:13,textDecoration:"none",transition:"color .15s",lineHeight:1.4}}
                     onMouseEnter={e=>e.target.style.color="rgba(255,255,255,.8)"}
                     onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.4)"}>{l}</a>
                 ))}
@@ -957,16 +983,57 @@ function Footer({isMobile,isTablet}){
             </div>
           ))}
         </div>
-        {/* Bottom bar */}
         <div style={{borderTop:"1px solid rgba(255,255,255,.08)",paddingTop:24,display:"flex",alignItems:"center",justifyContent:"space-between",flexDirection:isMobile?"column":"row",gap:isMobile?12:0}}>
-          <p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 DTE SOLUTIONS MD Escapes LLC · Private stays, designed slowly.</p>
+          <p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 DTE Solutions MD Escapes LLC. All rights reserved. <br/>Designed by DTE Solutions.</p>
           <div style={{display:"flex",gap:20}}>
-            {["Privacy Policy","Terms & Conditions","Cookie Policy"].map(l=>(
-              <a key={l} href="#" style={{color:"rgba(255,255,255,.25)",fontSize:12,textDecoration:"none"}}>{l}</a>
+            {["Privacy Policy","Terms & Conditions"].map(l=>(
+              <a key={l} href="#" onClick={e=>e.preventDefault()} style={{color:"rgba(255,255,255,.25)",fontSize:12,textDecoration:"none"}} onMouseEnter={e=>e.target.style.color="rgba(255,255,255,.6)"} onMouseLeave={e=>e.target.style.color="rgba(255,255,255,.25)"}>{l}</a>
             ))}
           </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+function ContactModal({isOpen,onClose,isMobile}){
+  if(!isOpen) return null;
+  return(
+    <div style={{position:"fixed",inset:0,zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20,animation:"fadeIn .2s ease both"}}>
+      <div onClick={onClose} style={{position:"absolute",inset:0,background:"rgba(14,21,32,.85)",backdropFilter:"blur(8px)"}}/>
+      <div style={{position:"relative",background:C.white,width:"100%",maxWidth:500,borderRadius:24,overflow:"hidden",boxShadow:"0 20px 60px rgba(0,0,0,.3)",animation:"fadeUp .3s ease both"}}>
+        <div style={{padding:isMobile?"32px 24px":"40px 48px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24}}>
+            <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:28,fontWeight:500}}>Get in Touch</h3>
+            <button className="mclose" onClick={onClose} style={{background:C.card,border:"none",width:36,height:36,borderRadius:"50%",cursor:"pointer",fontSize:20,display:"flex",alignItems:"center",justifyContent:"center",color:C.muted}}>×</button>
+          </div>
+          <p style={{color:C.muted,fontSize:15,lineHeight:1.6,marginBottom:32}}>Whether you're looking for a project bid, design consultation, or support with our visualizer, we're here to help.</p>
+          
+          <div style={{display:"flex",flexDirection:"column",gap:16,marginBottom:32}}>
+            <div style={{background:C.card,padding:16,borderRadius:16,display:"flex",alignItems:"center",gap:14}}>
+              <div style={{width:40,height:40,background:C.green,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{fontSize:18}}>📍</span></div>
+              <div>
+                <p style={{fontSize:11,fontWeight:600,color:C.accent,textTransform:"uppercase",letterSpacing:".1em"}}>Location</p>
+                <p style={{fontSize:14,fontWeight:500}}>Based in Missouri, USA</p>
+              </div>
+            </div>
+            <div style={{background:C.card,padding:16,borderRadius:16,display:"flex",alignItems:"center",gap:14}}>
+              <div style={{width:40,height:40,background:C.green,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><span style={{fontSize:18}}>✉️</span></div>
+              <div>
+                <p style={{fontSize:11,fontWeight:600,color:C.accent,textTransform:"uppercase",letterSpacing:".1em"}}>Email</p>
+                <p style={{fontSize:14,fontWeight:500}}>hello@dtesolutions.com</p>
+              </div>
+            </div>
+          </div>
+
+          <form onSubmit={e=>{e.preventDefault(); alert("Message sent! We'll be in touch soon."); onClose();}} style={{display:"flex",flexDirection:"column",gap:14}}>
+            <input required placeholder="Your Name" style={{padding:"14px 20px",borderRadius:12,border:`1px solid ${C.border}`,fontSize:15,fontFamily:"inherit"}} />
+            <input required type="email" placeholder="Email Address" style={{padding:"14px 20px",borderRadius:12,border:`1px solid ${C.border}`,fontSize:15,fontFamily:"inherit"}} />
+            <textarea required placeholder="How can we help?" rows={4} style={{padding:"14px 20px",borderRadius:12,border:`1px solid ${C.border}`,fontSize:15,fontFamily:"inherit",resize:"none"}} />
+            <button className="ma" style={{background:C.green,color:"white",border:"none",borderRadius:50,padding:"16px",fontSize:15,fontWeight:600,cursor:"pointer",marginTop:10}}>Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }
