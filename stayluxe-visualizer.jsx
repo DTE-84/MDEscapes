@@ -72,6 +72,7 @@ export default function MDEscapesApp() {
   const width=useWidth(); const isMobile=width<768; const isTablet=width<1024;
   const [activePropType,setActivePropType]=useState("All");
   const [activeSection,setActiveSection]=useState("stays");
+  const [activeModal,setActiveModal]=useState(null); // 'privacy', 'terms', 'contact'
   const visRef=useRef(null);
   const scrollToVis=()=>{setActiveSection("visualizer");setTimeout(()=>visRef.current?.scrollIntoView({behavior:"smooth",block:"start"}),50);};
   return (
@@ -80,6 +81,7 @@ export default function MDEscapesApp() {
         *{box-sizing:border-box;margin:0;padding:0;}
         @keyframes spin{to{transform:rotate(360deg);}}
         @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
         .ma:hover{background:#B03D2C!important;}
         .mg:hover{background:rgba(28,23,18,.06)!important;}
@@ -95,7 +97,8 @@ export default function MDEscapesApp() {
       <div ref={visRef}><VisualizerSection isMobile={isMobile} isTablet={isTablet}/></div>
       <HowItWorks isMobile={isMobile}/>
       <FeaturedStays isMobile={isMobile} isTablet={isTablet}/>
-      <Footer isMobile={isMobile}/>
+      <Footer isMobile={isMobile} setActiveModal={setActiveModal}/>
+      <Modal activeModal={activeModal} setActiveModal={setActiveModal} isMobile={isMobile}/>
     </div>
   );
 }
@@ -280,13 +283,16 @@ function VisualizerSection({isMobile,isTablet}){
           id:Date.now()+Math.random(),
           name:file.name.replace(/\.[^/.]+$/,""),
           src:e.target.result,
-          x:50,y:50,scale:0.28,blend:"multiply"
+          x:50,y:50,scale:0.28,blend:"multiply",
+          url: "",
+          price: ""
         }]);
       };
       reader.readAsDataURL(file);
     });
   };
   const removeProduct=(id)=>setProductImages(prev=>prev.filter(p=>p.id!==id));
+  const updateProduct=(id,updates)=>setProductImages(prev=>prev.map(p=>p.id===id?{...p,...updates}:p));
   const toggleBlend=(id)=>setProductImages(prev=>prev.map(p=>p.id===id?{...p,blend:p.blend==="multiply"?"normal":"multiply"}:p));
   const startResizeDrag=(e,prod)=>{
     e.stopPropagation();
@@ -377,7 +383,7 @@ function VisualizerSection({isMobile,isTablet}){
                   <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:19,fontWeight:600}}>Design Studio</h3>
                   {activeCount>0&&<span style={{fontSize:11,color:C.muted,background:C.border,borderRadius:50,padding:"3px 10px"}}>{activeCount} active</span>}
                 </div>
-                <ControlTabs activeTab={activeTab} setActiveTab={setActiveTab} selectedColor={selectedColor} setSelectedColor={setSelectedColor} useCustom={useCustom} setUseCustom={setUseCustom} customHex={customHex} setCustomHex={setCustomHex} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} selectedFurniture={selectedFurniture} toggleFurniture={toggleFurniture} placedItems={placedItems} addToCanvas={addToCanvas} savedVisions={savedVisions} setSavedVisions={setSavedVisions} viewingSaved={viewingSaved} setViewingSaved={setViewingSaved} applyQuickTransform={applyQuickTransform} isMobile={false}/>
+                <ControlTabs activeTab={activeTab} setActiveTab={setActiveTab} selectedColor={selectedColor} setSelectedColor={setSelectedColor} useCustom={useCustom} setUseCustom={setUseCustom} customHex={customHex} setCustomHex={setCustomHex} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} selectedFurniture={selectedFurniture} toggleFurniture={toggleFurniture} placedItems={placedItems} addToCanvas={addToCanvas} savedVisions={savedVisions} setSavedVisions={setSavedVisions} viewingSaved={viewingSaved} setViewingSaved={setViewingSaved} applyQuickTransform={applyQuickTransform} productImages={productImages} updateProduct={updateProduct} isMobile={false}/>
                 {activeCount>0&&(
                   <div style={{margin:"16px 0",padding:"12px 14px",background:"white",borderRadius:12,border:`1px solid ${C.border}`}}>
                     <p style={{fontSize:11,fontWeight:600,color:C.muted,textTransform:"uppercase",letterSpacing:".1em",marginBottom:8}}>Current Selection</p>
@@ -400,7 +406,7 @@ function VisualizerSection({isMobile,isTablet}){
                       <span style={{color:C.muted,fontSize:18,display:"inline-block",transform:controlsOpen?"rotate(180deg)":"none",transition:"transform .2s"}}>⌄</span>
                     </div>
                   </button>
-                  {controlsOpen&&<div style={{padding:"0 18px 18px",background:C.card}}><ControlTabs activeTab={activeTab} setActiveTab={setActiveTab} selectedColor={selectedColor} setSelectedColor={setSelectedColor} useCustom={useCustom} setUseCustom={setUseCustom} customHex={customHex} setCustomHex={setCustomHex} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} selectedFurniture={selectedFurniture} toggleFurniture={toggleFurniture} placedItems={placedItems} addToCanvas={addToCanvas} savedVisions={savedVisions} setSavedVisions={setSavedVisions} viewingSaved={viewingSaved} setViewingSaved={setViewingSaved} applyQuickTransform={applyQuickTransform} isMobile={true}/></div>}
+                  {controlsOpen&&<div style={{padding:"0 18px 18px",background:C.card}}><ControlTabs activeTab={activeTab} setActiveTab={setActiveTab} selectedColor={selectedColor} setSelectedColor={setSelectedColor} useCustom={useCustom} setUseCustom={setUseCustom} customHex={customHex} setCustomHex={setCustomHex} selectedStyle={selectedStyle} setSelectedStyle={setSelectedStyle} selectedFurniture={selectedFurniture} toggleFurniture={toggleFurniture} placedItems={placedItems} addToCanvas={addToCanvas} savedVisions={savedVisions} setSavedVisions={setSavedVisions} viewingSaved={viewingSaved} setViewingSaved={setViewingSaved} applyQuickTransform={applyQuickTransform} productImages={productImages} updateProduct={updateProduct} isMobile={true}/></div>}
                 </div>
               )}
 
@@ -432,7 +438,7 @@ function VisualizerSection({isMobile,isTablet}){
                   <div key={prod.id}
                     onMouseDown={e=>startProductDrag(e,prod)}
                     onTouchStart={e=>{e.stopPropagation();const t=e.touches[0];const rect=imgContainerRef.current?.getBoundingClientRect();furnDrag.current={id:"product_"+prod.id,ox:t.clientX-rect.left-(prod.x/100*rect.width),oy:t.clientY-rect.top-(prod.y/100*rect.height),isProduct:true};}}
-                    style={{position:"absolute",left:`${prod.x}%`,top:`${prod.y}%`,transform:`translate(-50%,-50%) scale(${prod.scale})`,zIndex:12,cursor:"grab",userSelect:"none",transformOrigin:"center center"}}>
+                    style={{position:"absolute",left:`${prod.x}%`,top:`${prod.y}%`,transform:`translate(-50%,-50%) scale(${prod.scale}) skewX(${prod.skew||0}deg)`,zIndex:12,cursor:"grab",userSelect:"none",transformOrigin:"center center"}}>
                     <div style={{position:"relative",display:"inline-block"}}>
                       <img src={prod.src} alt={prod.name}
                         style={{maxWidth:240,maxHeight:240,display:"block",mixBlendMode:prod.blend,filter:"drop-shadow(0 4px 10px rgba(0,0,0,0.25))",borderRadius:4}}
@@ -440,8 +446,19 @@ function VisualizerSection({isMobile,isTablet}){
                       />
                       {/* × remove */}
                       <button onClick={e=>{e.stopPropagation();removeProduct(prod.id);}} style={{position:"absolute",top:-10,left:-10,width:20,height:20,borderRadius:"50%",background:C.accent,border:"none",color:"white",fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:14,lineHeight:1}}>×</button>
-                      {/* blend toggle */}
-                      <button onClick={e=>{e.stopPropagation();toggleBlend(prod.id);}} title={prod.blend==="multiply"?"White bg removed (multiply)":"Normal blend"} style={{position:"absolute",top:-10,right:-10,width:20,height:20,borderRadius:"50%",background:prod.blend==="multiply"?C.green:"rgba(0,0,0,.5)",border:"none",color:"white",fontSize:9,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:14,lineHeight:1,fontWeight:700}}>BG</button>
+                      
+                      {/* price tag */}
+                      {prod.price && (
+                        <div style={{position:"absolute",top:10,right:10,background:C.green,color:"white",padding:"3px 8px",borderRadius:4,fontSize:10,fontWeight:700,boxShadow:"0 2px 6px rgba(0,0,0,0.2)",zIndex:15}}>{prod.price}</div>
+                      )}
+
+                      {/* shop link */}
+                      {prod.url && (
+                        <a href={prod.url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()} style={{position:"absolute",bottom:10,right:10,background:"white",color:C.text,padding:"4px 10px",borderRadius:20,fontSize:9,fontWeight:700,textDecoration:"none",boxShadow:"0 2px 6px rgba(0,0,0,0.2)",zIndex:15,display:"flex",alignItems:"center",gap:4}}>
+                          SHOP <span style={{fontSize:8}}>↗</span>
+                        </a>
+                      )}
+
                       {/* resize handle */}
                       <div onMouseDown={e=>{e.stopPropagation();productResizeDrag.current={id:prod.id,startX:e.clientX,startScale:prod.scale};}} onTouchStart={e=>{e.stopPropagation();productResizeDrag.current={id:prod.id,startX:e.touches[0].clientX,startScale:prod.scale};}}
                         style={{position:"absolute",bottom:-8,right:-8,width:16,height:16,background:"white",border:`2px solid ${C.accent}`,borderRadius:3,cursor:"se-resize",zIndex:14,display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.accent}}>⤡</div>
@@ -527,7 +544,7 @@ function RoomIntelligence({analysis,isAnalyzing,open,setOpen,isMobile}){
   );
 }
 
-function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useCustom,setUseCustom,customHex,setCustomHex,selectedStyle,setSelectedStyle,selectedFurniture,toggleFurniture,placedItems,addToCanvas,savedVisions,setSavedVisions,viewingSaved,setViewingSaved,applyQuickTransform,isMobile}){
+function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useCustom,setUseCustom,customHex,setCustomHex,selectedStyle,setSelectedStyle,selectedFurniture,toggleFurniture,placedItems,addToCanvas,savedVisions,setSavedVisions,viewingSaved,setViewingSaved,applyQuickTransform,productImages,updateProduct,isMobile}){
   return(
     <>
       <div style={{display:"flex",borderBottom:`1px solid ${C.border}`,marginBottom:16,overflowX:"auto"}}>
@@ -585,7 +602,7 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
               <div>
                 <p style={{fontSize:13,fontWeight:600,color:C.text}}>📸 My Products</p>
-                <p style={{fontSize:11,color:C.muted,marginTop:2}}>Upload saved images from IKEA, Wayfair, Amazon, etc.</p>
+                <p style={{fontSize:11,color:C.muted,marginTop:2}}>Upload images · Map to real store items</p>
               </div>
               <label style={{background:C.accent,color:"white",borderRadius:50,padding:"6px 14px",fontSize:12,fontWeight:600,cursor:"pointer",flexShrink:0,fontFamily:"'DM Sans',sans-serif"}}>
                 + Add
@@ -593,21 +610,39 @@ function ControlTabs({activeTab,setActiveTab,selectedColor,setSelectedColor,useC
               </label>
             </div>
             {productImages.length>0?(
-              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
                 {productImages.map(prod=>(
-                  <div key={prod.id} style={{display:"flex",alignItems:"center",gap:10,padding:"6px 10px",background:C.card,borderRadius:10,border:`1px solid ${C.border}`}}>
-                    <img src={prod.src} alt={prod.name} style={{width:36,height:36,objectFit:"contain",borderRadius:6,background:"white",border:`1px solid ${C.border}`,flexShrink:0}}/>
-                    <div style={{flex:1,minWidth:0}}>
-                      <p style={{fontSize:12,fontWeight:500,color:C.text,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{prod.name}</p>
-                      <p style={{fontSize:10,color:C.muted}}>On canvas · drag to position · ⤡ to resize</p>
+                  <div key={prod.id} style={{padding:"12px",background:C.card,borderRadius:12,border:`1px solid ${C.border}`}}>
+                    <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
+                      <img src={prod.src} alt={prod.name} style={{width:44,height:44,objectFit:"contain",borderRadius:8,background:"white",border:`1px solid ${C.border}`,flexShrink:0}}/>
+                      <div style={{flex:1,minWidth:0}}>
+                        <input value={prod.name} onChange={e=>updateProduct(prod.id,{name:e.target.value})} style={{fontSize:13,fontWeight:600,color:C.text,width:"100%",background:"none",border:"none",borderBottom:"1px solid transparent",padding:"2px 0",outline:"none"}} placeholder="Product Name"/>
+                        <p style={{fontSize:10,color:C.muted}}>Drag to move · ⤡ to resize · BG for transparency</p>
+                      </div>
+                      <div style={{display:"flex",gap:5}}>
+                        <button onClick={()=>toggleBlend(prod.id)} title="Toggle white background removal" style={{background:prod.blend==="multiply"?C.green:C.border,color:"white",border:"none",borderRadius:50,padding:"4px 10px",fontSize:10,fontWeight:700,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>BG {prod.blend==="multiply"?"ON":"OFF"}</button>
+                        <button onClick={()=>removeProduct(prod.id)} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:50,width:26,height:26,fontSize:14,color:C.muted,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+                      </div>
                     </div>
-                    <div style={{display:"flex",gap:5,flexShrink:0}}>
-                      <button onClick={()=>toggleBlend(prod.id)} title="Toggle white background removal" style={{background:prod.blend==="multiply"?C.green:C.border,color:"white",border:"none",borderRadius:50,padding:"3px 8px",fontSize:9,fontWeight:700,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>BG {prod.blend==="multiply"?"ON":"OFF"}</button>
-                      <button onClick={()=>removeProduct(prod.id)} style={{background:"none",border:`1px solid ${C.border}`,borderRadius:50,width:22,height:22,fontSize:13,color:C.muted,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>×</button>
+                    
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+                      <div style={{position:"relative"}}>
+                        <span style={{position:"absolute",left:8,top:6,fontSize:10,color:C.muted}}>URL</span>
+                        <input value={prod.url} onChange={e=>updateProduct(prod.id,{url:e.target.value})} style={{width:"100%",padding:"18px 8px 6px",fontSize:11,borderRadius:8,border:`1px solid ${C.border}`,background:"white",outline:"none"}} placeholder="Store link..."/>
+                      </div>
+                      <div style={{position:"relative"}}>
+                        <span style={{position:"absolute",left:8,top:6,fontSize:10,color:C.muted}}>PRICE</span>
+                        <input value={prod.price} onChange={e=>updateProduct(prod.id,{price:e.target.value})} style={{width:"100%",padding:"18px 8px 6px",fontSize:11,borderRadius:8,border:`1px solid ${C.border}`,background:"white",outline:"none"}} placeholder="$0.00"/>
+                      </div>
+                    </div>
+
+                    <div style={{display:"flex",alignItems:"center",gap:10}}>
+                      <span style={{fontSize:10,color:C.muted,fontWeight:600,textTransform:"uppercase",width:40}}>Perspective</span>
+                      <input type="range" min="-30" max="30" value={prod.skew||0} onChange={e=>updateProduct(prod.id,{skew:parseInt(e.target.value)})} style={{flex:1,height:4,accentColor:C.accent}}/>
+                      <span style={{fontSize:10,color:C.muted,fontFamily:"monospace",width:24}}>{prod.skew||0}°</span>
                     </div>
                   </div>
                 ))}
-                <p style={{fontSize:10,color:C.muted,textAlign:"center",marginTop:2}}>BG ON removes white backgrounds (best for store photos)</p>
               </div>
             ):(
               <p style={{fontSize:12,color:C.muted,textAlign:"center",paddingTop:4}}>No products added yet</p>
@@ -774,7 +809,7 @@ function FeaturedStays({isMobile,isTablet}){
   );
 }
 
-function Footer({isMobile}){
+function Footer({isMobile, setActiveModal}){
   return(
     <footer style={{background:C.text,padding:isMobile?"32px 20px":"40px 48px"}}>
       <div style={{maxWidth:1140,margin:"0 auto",display:"flex",alignItems:isMobile?"flex-start":"center",justifyContent:"space-between",flexDirection:isMobile?"column":"row",gap:isMobile?16:0}}>
@@ -783,9 +818,61 @@ function Footer({isMobile}){
           <span style={{fontFamily:"'Playfair Display',serif",fontWeight:600,fontSize:16,letterSpacing:"-0.3px",color:"white"}}>md escapes</span>
         </div>
         {!isMobile&&<p style={{color:"rgba(255,255,255,.3)",fontSize:13}}>© 2026 MD Escapes. Private stays, designed slowly.</p>}
-        <div style={{display:"flex",gap:20}}>{["Privacy","Terms","Contact"].map(l=><a key={l} href="#" style={{color:"rgba(255,255,255,.4)",fontSize:13,textDecoration:"none"}}>{l}</a>)}</div>
+        <div style={{display:"flex",gap:20}}>
+          {["Privacy","Terms","Contact"].map(l=>(
+            <button key={l} onClick={()=>setActiveModal(l.toLowerCase())} style={{background:"none",border:"none",color:"rgba(255,255,255,.4)",fontSize:13,cursor:"pointer",fontFamily:"'DM Sans',sans-serif"}}>{l}</button>
+          ))}
+        </div>
         {isMobile&&<p style={{color:"rgba(255,255,255,.25)",fontSize:12}}>© 2026 MD Escapes</p>}
       </div>
     </footer>
+  );
+}
+
+function Modal({activeModal, setActiveModal, isMobile}) {
+  if (!activeModal) return null;
+
+  const content = {
+    privacy: {
+      title: "Privacy Policy",
+      body: `We value your privacy. MD Escapes collects minimal data required to provide our design visualization services. We do not sell your personal information. Your uploaded room photos are processed securely and are only used for your specific design vision.`
+    },
+    terms: {
+      title: "Terms of Service",
+      body: `By using MD Escapes, you agree to our terms. This visualizer is for conceptual design purposes. Final architectural decisions should be verified by a licensed professional. All design visions generated by our AI are the intellectual property of MD Escapes.`
+    },
+    contact: {
+      title: "Contact Mickey",
+      body: `Ready to transform your space? Mickey is available for custom interior design consultations and premium property staging. Reach out to start your design journey.`,
+      details: [
+        { label: "Email", value: "hello@mdescapes.com" },
+        { label: "Phone", value: "+1 (555) 000-0000" },
+        { label: "Instagram", value: "@mdescapes" }
+      ]
+    }
+  }[activeModal];
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(28,23,18,0.85)",backdropFilter:"blur(12px)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1000,animation:"fadeIn 0.3s ease both",padding:20}} onClick={()=>setActiveModal(null)}>
+      <div style={{background:C.bg,width:"100%",maxWidth:600,borderRadius:24,padding:isMobile?24:48,position:"relative",animation:"fadeUp 0.4s ease both",boxShadow:"0 20px 80px rgba(0,0,0,0.4)",border:`1px solid ${C.border}`}} onClick={e=>e.stopPropagation()}>
+        <button onClick={()=>setActiveModal(null)} style={{position:"absolute",top:24,right:24,background:C.border,border:"none",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:18,color:C.text,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+        <p style={{color:C.accent,fontSize:11,fontWeight:600,letterSpacing:".18em",textTransform:"uppercase",marginBottom:14}}>— {activeModal === 'contact' ? "Get in Touch" : "Legal Document"}</p>
+        <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:isMobile?28:36,marginBottom:20,fontWeight:400}}>{content.title}</h2>
+        <p style={{fontSize:16,color:C.muted,lineHeight:1.8,marginBottom:24}}>{content.body}</p>
+        
+        {content.details && (
+          <div style={{display:"grid",gap:12,marginTop:32}}>
+            {content.details.map(d=>(
+              <div key={d.label} style={{display:"flex",justifyContent:"space-between",padding:"16px 20px",background:C.white,borderRadius:16,border:`1px solid ${C.border}`}}>
+                <span style={{fontSize:12,fontWeight:600,color:C.accent,textTransform:"uppercase",letterSpacing:".05em"}}>{d.label}</span>
+                <span style={{fontSize:14,fontWeight:500,color:C.text}}>{d.value}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <button onClick={()=>setActiveModal(null)} className="ma" style={{width:"100%",marginTop:32,background:C.accent,color:"white",border:"none",borderRadius:50,padding:"14px",fontSize:15,fontWeight:600,cursor:"pointer",transition:"background .2s",fontFamily:"'DM Sans',sans-serif"}}>Close Window</button>
+      </div>
+    </div>
   );
 }
